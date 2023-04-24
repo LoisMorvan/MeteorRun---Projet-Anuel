@@ -36,7 +36,7 @@ export default class MainMenu extends Phaser.Scene {
         // Crée le texte du score
         this.playText = this.add.text(350, 300, 'PLAY', { fontSize: '32px', fill: '#000' });
         this.playText.setInteractive();
-        this.input.on('gameobjectdown', () => {
+        this.playText.on('pointerdown', () => {
 
             this.scene.start('MainGame');
 
