@@ -1,9 +1,9 @@
 export default class MainGame extends Phaser.Scene {
-    
-    constructor ()
-    {
+
+    constructor() {
         super('MainGame');
 
+        this.ground;
         this.player;
         this.meteors;
         this.cursors;
@@ -29,10 +29,15 @@ export default class MainGame extends Phaser.Scene {
 
     create() {
         
+        // Ajoute une image de fond
         this.add.image(400, 300, 'background').setScale(2);
-        this.add.image(400, 600, 'ground').setScale(2);
+
+        // Ajoute le sol
+        this.ground = this.physics.add.staticGroup();
+        this.ground.create(400, 600, 'ground').setScale(2).refreshBody();
+
         // Crée le joueur
-        this.player = this.physics.add.sprite(400, 552, 'player');
+        this.player = this.physics.add.sprite(400, 550, 'player');
         this.player.setCollideWorldBounds(true);
 
         // Crée les météorites
@@ -48,8 +53,10 @@ export default class MainGame extends Phaser.Scene {
         this.gameOverText = this.add.text(250, 250, 'GAME OVER\nPress F5 to Restart', { fontSize: '40px', fill: '#000' });
         this.gameOverText.setVisible(false);
 
-        // Gère la collision entre les météorites et le joueur
+        // Gère la collision entre les météorites, le joueur et le sol
         this.physics.add.collider(this.player, this.meteors, this.hitMeteor, null, this);
+        this.physics.add.collider(this.player, this.ground);
+        this.physics.add.collider(this.meteors, this.ground);
     }
 
     update(time, delta) {
@@ -82,10 +89,11 @@ export default class MainGame extends Phaser.Scene {
             this.lastMeteorVelocityYAccelerated = false;
         }
 
-        // Vérifie si les météorites sont sorties de l'écran en bas
-        this.meteors.getChildren().forEach(function (meteor) {
-            if (meteor.y > 550 && meteor.active) {
+        // Vérifie si les météorites touche le sol
+        this.meteors.getChildren().forEach((meteor) => {
+            if (meteor.body.touching.down && meteor.active) {
                 meteor.destroy();
+                this.score += 1;
             }
         });
     }
