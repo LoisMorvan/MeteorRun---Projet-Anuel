@@ -37,7 +37,7 @@ export default class MainGame extends Phaser.Scene {
         this.ground.create(400, 600, 'ground').setScale(2).refreshBody();
 
         // Crée le joueur
-        this.player = this.physics.add.sprite(400, 550, 'player');
+        this.player = this.physics.add.sprite(400, 500, 'player').setScale(0.4).setVelocityY(100);
         this.player.setCollideWorldBounds(true);
 
         // Crée les météorites
@@ -101,7 +101,7 @@ export default class MainGame extends Phaser.Scene {
     generateMeteor() {
         if (!this.gameOver) {
             var x = Phaser.Math.Between(0, 800);
-            var meteor = this.meteors.create(x, 0, 'meteor');
+            var meteor = this.meteors.create(x, 0, 'meteor').setScale(0.04);
             meteor.setVelocityY(this.lastMeteorVelocityY);
             meteor.setCollideWorldBounds(true);
             meteor.setBounce(1);

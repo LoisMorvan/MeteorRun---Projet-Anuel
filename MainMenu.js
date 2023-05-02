@@ -74,9 +74,11 @@ export default class MainMenu extends Phaser.Scene {
     }
 
     generateMeteor() {
+        console.log("alo", this.meteors);
+
         if (!this.gameOver) {
             var x = Phaser.Math.Between(0, 800);
-            var meteor = this.meteors.create(x, 0, 'meteor');
+            var meteor = this.meteors.create(x, 0, 'meteor').setScale(0.04);
             meteor.setVelocityY(this.lastMeteorVelocityY);
             meteor.setCollideWorldBounds(true);
             meteor.setBounce(1);
