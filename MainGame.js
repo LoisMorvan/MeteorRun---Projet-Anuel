@@ -1,15 +1,11 @@
 export default class MainGame extends Phaser.Scene {
   constructor() {
     super("MainGame");
+  }
 
-    this.ground;
-    this.player;
-    this.meteors;
-    this.cursors;
+  init() {
     this.score = 0;
     this.gameOver = false;
-    this.scoreText;
-    this.gameOverText;
     this.meteorTimer = 0;
     this.meteorAcceleration = 1.2;
     this.lastMeteorVelocityY = Phaser.Math.Between(100, 300);
@@ -17,8 +13,6 @@ export default class MainGame extends Phaser.Scene {
     this.lastAccelerationTime = 0;
     this.meteorGenerationTime = 1000;
   }
-
-  // @TODO creer un init pour le reload de la page
 
   preload() {
     this.load.setPath("assets/");
@@ -137,6 +131,7 @@ export default class MainGame extends Phaser.Scene {
 
   showGameOver() {
     // Show game over scene as overlay
+    this.scoreText.setVisible(false);
     this.scene.launch("GameOver", { score: this.score });
     const panel = this.scene.get("GameOver");
 
