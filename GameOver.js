@@ -95,6 +95,7 @@ export default class GameOver extends Phaser.Scene {
     const hit_area = new Phaser.Geom.Rectangle(0, 0, w, h);
     btn.setInteractive(hit_area, Phaser.Geom.Rectangle.Contains);
 
+    // Gestion visuelle du clic sur le bouton
     btn.myDownCallback = () => {
       btn.clear();
       btn.fillStyle("0x60BFB8", 1);
