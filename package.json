@@ -11,10 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/Zyldras/MeteorRun---Projet-Anuel.git"
   },
-  "author": [
-    "MORVAN Loïs",
-    "ETHEVE Théo"
-  ],
+  "author": "MORVAN Loïs, ETHEVE Théo, PRODAULT Guillaume",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Zyldras/MeteorRun---Projet-Anuel/issues"
