@@ -32,7 +32,7 @@ export default class MainMenu extends Phaser.Scene {
     this.meteors = this.physics.add.group();
 
     // Crée le texte du score
-    this.playText = this.add.text(350, 300, "PLAY", {
+    this.playText = this.add.text(350, 300, "PUTE", {
       fontSize: "32px",
       fill: "#000",
     });
