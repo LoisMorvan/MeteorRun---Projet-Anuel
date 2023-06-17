@@ -37,7 +37,7 @@ export default class MainMenu extends Phaser.Scene {
     });
     this.playText.setInteractive();
     this.playText.on("pointerdown", () => {
-      this.scene.start("MainGame");
+      this.scene.start("Login");
     });
 
     // Crée le texte du score
