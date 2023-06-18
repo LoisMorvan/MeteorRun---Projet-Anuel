@@ -8,6 +8,7 @@ const port = 3000;
 
 // Ouvrir la connexion à la base de données SQLite
 const db = new sqlite3.Database('./database.sqlite');
+const bcrypt = require('bcrypt');
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
@@ -48,7 +49,7 @@ app.post('/saveScore', (req, res) => {
                         console.error(err);
                         res.status(500).json({ error: 'Internal Server Error' });
                     } else {
-                        console.log("Database UPDATE :\t user " + id + ": score " + score);
+                        console.log("Database UPDATE :\t user " + id + " ; score " + score);
                         res.json({ success: true, message: 'Score enregistré avec succès.' });
                     }
                 });
@@ -66,6 +67,42 @@ app.get('/user', (req, res) => {
         } else {
             console.log("/user Request successful");
             res.json(rows);
+        }
+    });
+});
+
+// API pour enregistrer un nouveau user
+app.post("/register", async (req, res) => {
+    const { pseudo, mail } = req.body;
+
+    db.get('SELECT pseudo FROM user WHERE pseudo = ?', pseudo, async (err, row) => {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+        else {
+            if (row) {
+                console.error("database INSERT FAIL : User " + pseudo + " already exist !");
+                res.json({ success: false, message: 'User déjà inscrit.' });
+            }
+            else {
+                try {
+                    const hashedPassword = await bcrypt.hash(req.body.pwd, 10);
+                    db.run('INSERT INTO user (pseudo, mail, pwd) VALUES (?, ?, ?)', [pseudo, mail, hashedPassword], (err) => {
+                        if (err) {
+                            console.error(err);
+                            res.status(500).json({ error: 'Internal Server Error' });
+                        } else {
+                            console.log("Database INSERT :\t user " + pseudo + " ; mail " + mail + " ; pwd " + hashedPassword);
+                            res.json({ success: true, message: 'User crée avec succès.' });
+                        }
+                    });
+                    
+                } catch (e) {
+                    console.error(e);
+                    res.redirect("/register");
+                }
+            }
         }
     });
 });

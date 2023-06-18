@@ -60,6 +60,16 @@ export default class MainMenu extends Phaser.Scene {
       this.scene.start("Login");
     });
 
+    // Crée le texte d'inscription
+    this.registerText = this.add.text(480, 27, "REGISTER", {
+      fontSize: "32px",
+      fill: "#000",
+    });
+    this.registerText.setInteractive();
+    this.registerText.on("pointerdown", () => {
+      this.register();
+    });
+
     // Gère les collision entre les météorites et le sol
     this.physics.add.collider(this.meteors, this.ground);
   }
@@ -109,5 +119,28 @@ export default class MainMenu extends Phaser.Scene {
     this.scene.launch("Classement");
     this.playText.disableInteractive();
     this.classementText.disableInteractive();
+  }
+
+  register() {
+    // Appel API pour enregistrer le score
+    fetch("/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        pseudo: "Zylau",
+        mail: "mailyto@gmail.com",
+        pwd: "lemdp2"
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Le score a été enregistré avec succès
+        console.log("Requête envoyé au back :", data);
+      })
+      .catch(error => {
+        console.error("Erreur lors de l'envoie du formulaire :", error);
+      });
   }
 }
