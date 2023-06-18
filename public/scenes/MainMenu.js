@@ -30,14 +30,14 @@ export default class MainMenu extends Phaser.Scene {
     // Crée les météorites
     this.meteors = this.physics.add.group();
 
-    // Crée le texte du score
+    // Crée le texte du jeu
     this.playText = this.add.text(350, 270, "PLAY", {
       fontSize: "32px",
       fill: "#000",
     });
     this.playText.setInteractive();
     this.playText.on("pointerdown", () => {
-      this.scene.start("Login");
+      this.scene.start("MainGame");
     });
 
     // Crée le texte du score
@@ -48,6 +48,16 @@ export default class MainMenu extends Phaser.Scene {
     this.classementText.setInteractive();
     this.classementText.on("pointerdown", () => {
       this.showClassement();
+    });
+
+    // Crée le texte du login
+    this.loginText = this.add.text(666, 27, "LOGIN", {
+      fontSize: "32px",
+      fill: "#000",
+    });
+    this.loginText.setInteractive();
+    this.loginText.on("pointerdown", () => {
+      this.scene.start("Login");
     });
 
     // Gère les collision entre les météorites et le sol

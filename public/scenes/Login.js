@@ -18,7 +18,7 @@ export default class Login extends Phaser.Scene {
     this.background.fillStyle("0xFFF092", 1);
     this.background.fillRoundedRect(0, 0, w, h, 0);
 
-    // Game over title
+    // Login title
     this.title = this.add.text(200, y + 0.9 * h, "LOGIN", {
       fontSize: "70px",
       fill: "#000",

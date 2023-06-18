@@ -22,6 +22,7 @@ app.get('/scores', (req, res) => {
             console.error(err);
             res.status(500).json({ error: 'Internal Server Error' });
         } else {
+            console.log("/scores Request successful");
             res.json(rows);
         }
     });
@@ -47,6 +48,7 @@ app.post('/saveScore', (req, res) => {
                         console.error(err);
                         res.status(500).json({ error: 'Internal Server Error' });
                     } else {
+                        console.log("Database UPDATE :\t user " + id + ": score " + score);
                         res.json({ success: true, message: 'Score enregistré avec succès.' });
                     }
                 });
@@ -62,6 +64,7 @@ app.get('/user', (req, res) => {
             console.error(err);
             res.status(500).json({ error: 'Internal Server Error' });
         } else {
+            console.log("/user Request successful");
             res.json(rows);
         }
     });
