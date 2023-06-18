@@ -2,6 +2,7 @@ import MainMenu from "./scenes/MainMenu";
 import MainGame from "./scenes/MainGame";
 import GameOver from "./scenes/GameOver";
 import Login from "./scenes/Login";
+import Classement from "./scenes/Classement";
 
 // Configurer le jeu Phaser
 export const config = {
@@ -15,7 +16,7 @@ export const config = {
       debug: false,
     },
   },
-  scene: [MainMenu, MainGame, GameOver, Login],
+  scene: [MainMenu, MainGame, GameOver, Login, Classement],
 };
 
 // Créer une instance du jeu Phaser

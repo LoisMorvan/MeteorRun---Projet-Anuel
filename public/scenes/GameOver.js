@@ -37,7 +37,32 @@ export default class GameOver extends Phaser.Scene {
       }
     );
 
+    this.saveScore();
+
     this.createGameOverButtons(x, y, w, h);
+  }
+
+
+  saveScore() {
+    // Appel API pour enregistrer le score
+    fetch("/saveScore", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: 4,
+        score: this.score,
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Le score a été enregistré avec succès
+        console.log("Score enregistré :", data);
+      })
+      .catch(error => {
+        console.error("Erreur lors de l'enregistrement du score :", error);
+      });
   }
 
   createGameOverButtons(x, y, w, h) {

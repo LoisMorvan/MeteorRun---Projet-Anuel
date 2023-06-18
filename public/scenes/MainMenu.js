@@ -20,7 +20,6 @@ export default class MainMenu extends Phaser.Scene {
   }
 
   create() {
-    const score = 100;
     // Ajoute une image de fond
     this.add.image(400, 300, "background").setScale(2);
 
@@ -32,13 +31,23 @@ export default class MainMenu extends Phaser.Scene {
     this.meteors = this.physics.add.group();
 
     // Crée le texte du score
-    this.playText = this.add.text(350, 300, "PLAY", {
+    this.playText = this.add.text(350, 270, "PLAY", {
       fontSize: "32px",
       fill: "#000",
     });
     this.playText.setInteractive();
     this.playText.on("pointerdown", () => {
-      this.scene.start("MainGame");
+      this.scene.start("Login");
+    });
+
+    // Crée le texte du score
+    this.classementText = this.add.text(300, 330, "CLASSEMENT", {
+      fontSize: "32px",
+      fill: "#000",
+    });
+    this.classementText.setInteractive();
+    this.classementText.on("pointerdown", () => {
+      this.showClassement();
     });
 
     // Gère les collision entre les météorites et le sol
@@ -72,8 +81,6 @@ export default class MainMenu extends Phaser.Scene {
   }
 
   generateMeteor() {
-    console.log("alo", this.meteors);
-
     if (!this.gameOver) {
       var x = Phaser.Math.Between(0, 800);
       var meteor = this.meteors.create(x, 0, "meteor").setScale(0.04);
@@ -85,5 +92,12 @@ export default class MainMenu extends Phaser.Scene {
         meteor.velocityYBeforeAccelerate = this.lastMeteorVelocityY;
       }
     }
+  }
+
+  showClassement() {
+    // Show classement scene as overlay
+    this.scene.launch("Classement");
+    this.playText.disableInteractive();
+    this.classementText.disableInteractive();
   }
 }

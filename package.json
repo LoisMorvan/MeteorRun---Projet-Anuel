@@ -5,23 +5,21 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "start": "webpack && node app.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Zyldras/MeteorRun---Projet-Anuel.git"
   },
-  "author": [
-    "MORVAN Loïs",
-    "ETHEVE Théo"
-  ],
+  "author": "MORVAN Loïs, ETHEVE Théo, PRODAULT Guillaume",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Zyldras/MeteorRun---Projet-Anuel/issues"
   },
   "homepage": "https://github.com/Zyldras/MeteorRun---Projet-Anuel#readme",
   "dependencies": {
+    "body-parser": "^1.20.2",
     "express": "^4.18.2",
     "nodemon": "^2.0.22",
     "phaser": "^3.60.0",

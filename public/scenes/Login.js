@@ -8,10 +8,10 @@ export default class Login extends Phaser.Scene {
   init() {}
 
   create() {
-    const x = config.width - 100;
+    const x = config.width - 200;
     const w = config.width - 2 * x;
 
-    const y = config.height - 140;
+    const y = config.height - 80;
     const h = config.height - 2 * y;
 
     this.background = this.add.graphics({ x: x, y: y });
@@ -20,20 +20,9 @@ export default class Login extends Phaser.Scene {
 
     // Game over title
     this.title = this.add.text(200, y + 0.9 * h, "LOGIN", {
-      fontSize: "75px",
+      fontSize: "70px",
       fill: "#000",
     });
-
-    // Score title
-    this.text_score = this.add.text(
-      x + 0.7 * w,
-      y + 0.6 * h,
-      "Score : " + this.score,
-      {
-        fontSize: "40px",
-        fill: "#000",
-      }
-    );
 
     this.createGameOverButtons(x, y, w, h);
   }
@@ -41,7 +30,7 @@ export default class Login extends Phaser.Scene {
   createGameOverButtons(x, y, w, h) {
     this.btn_menu = this.createButton(
       x + 0.75 * w,
-      y + 0.23 * h,
+      y + 0.19 * h,
       this.clickMenu
     );
 
@@ -113,11 +102,7 @@ export default class Login extends Phaser.Scene {
     return btn;
   }
 
-  clickMenu() {
-    this.events.emit("clickMenu");
-  }
+  clickMenu() {}
 
-  clickRetry() {
-    this.events.emit("clickRetry");
-  }
+  clickRetry() {}
 }
