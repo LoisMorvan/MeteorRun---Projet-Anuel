@@ -1,0 +1,31 @@
+{
+  "name": "meteorrun",
+  "version": "1.0.0",
+  "description": "Projet Annuel ESGI Bachelor 3",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack && node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zyldras/MeteorRun---Projet-Anuel.git"
+  },
+  "author": "MORVAN Loïs, ETHEVE Théo, PRODAULT Guillaume",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Zyldras/MeteorRun---Projet-Anuel/issues"
+  },
+  "homepage": "https://github.com/Zyldras/MeteorRun---Projet-Anuel#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.22",
+    "phaser": "^3.60.0",
+    "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "webpack": "^5.83.1",
+    "webpack-cli": "^5.1.1"
+  }
+}
