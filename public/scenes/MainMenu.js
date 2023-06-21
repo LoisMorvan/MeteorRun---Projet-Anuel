@@ -6,10 +6,7 @@ export default class MainMenu extends Phaser.Scene {
   init() {
     this.meteorTimer = 0;
     this.meteorAcceleration = 1.2;
-    this.lastMeteorVelocityY = Phaser.Math.Between(100, 300);
-    this.lastMeteorVelocityYAccelerated = false;
-    this.lastAccelerationTime = 0;
-    this.meteorGenerationTime = 1000;
+    this.meteorGenerationTime = null;
   }
 
   preload() {
@@ -57,19 +54,10 @@ export default class MainMenu extends Phaser.Scene {
   update(time, delta) {
     // Génère les météorites toutes les secondes
     this.meteorTimer += delta;
+    this.meteorGenerationTime = Phaser.Math.Between(200, 1000);
     if (this.meteorTimer > this.meteorGenerationTime) {
       this.generateMeteor();
       this.meteorTimer = 0;
-    }
-
-    // Accélère la chute des météorites toutes les 10 secondes
-    if (time - this.lastAccelerationTime > 10000) {
-      this.lastAccelerationTime = time;
-      this.lastMeteorVelocityY *= this.meteorAcceleration;
-      this.lastMeteorVelocityYAccelerated = true;
-      this.meteorGenerationTime *= 0.8; // Réduit le temps entre les générations de 20% à chaque accélération
-    } else {
-      this.lastMeteorVelocityYAccelerated = false;
     }
 
     // Vérifie si les météorites touche le sol
@@ -84,13 +72,10 @@ export default class MainMenu extends Phaser.Scene {
     if (!this.gameOver) {
       var x = Phaser.Math.Between(0, 800);
       var meteor = this.meteors.create(x, 0, "meteor").setScale(0.04);
-      meteor.setVelocityY(this.lastMeteorVelocityY);
+      meteor.setVelocityY(Phaser.Math.Between(200, 900));
       meteor.setCollideWorldBounds(true);
       meteor.setBounce(1);
       meteor.setGravityY(0);
-      if (this.lastMeteorVelocityYAccelerated) {
-        meteor.velocityYBeforeAccelerate = this.lastMeteorVelocityY;
-      }
     }
   }
 
