@@ -23,7 +23,10 @@ export default class MainGame extends Phaser.Scene {
   preload() {
     this.load.setPath("../assets/");
     this.load.image("player", "player.png");
-    this.load.image("meteor", "meteor.png");
+    this.load.spritesheet('meteor', 'meteor.png', {
+      frameWidth: 420,
+      frameHeight: 580
+    });
     this.load.image("background", "sky.png");
     this.load.image("ground", "platform.png");
     this.load.image("bubble", "bubble.png");
@@ -72,6 +75,15 @@ export default class MainGame extends Phaser.Scene {
     this.player.setCollideWorldBounds(true);
 
     // Crée les météorites
+    this.anims.create({
+      key: 'meteor-animation',
+      frames: this.anims.generateFrameNumbers('meteor', {
+        start: 0,
+        end: 8-1, // Remplacez numFrames par le nombre total d'images du GIF
+      }),
+      frameRate: 10, // Réglez la vitesse de l'animation selon vos besoins
+      repeat: -1, // -1 pour répéter l'animation indéfiniment
+    });
     this.meteors = this.physics.add.group();
 
     // Crée les flèches du clavier
@@ -172,11 +184,12 @@ export default class MainGame extends Phaser.Scene {
   generateMeteor() {
     if (!this.gameOver) {
       var x = Phaser.Math.Between(0, 800);
-      var meteor = this.meteors.create(x, 0, "meteor").setScale(0.04);
+      var meteor = this.meteors.create(x, 0, "meteor").setScale(0.12);
       meteor.setVelocityY(this.lastMeteorVelocityY);
       meteor.setCollideWorldBounds(true);
       meteor.setBounce(1);
       meteor.setGravityY(0);
+      meteor.play('meteor-animation');
       if (this.lastMeteorVelocityYAccelerated) {
         meteor.velocityYBeforeAccelerate = this.lastMeteorVelocityY;
       }
@@ -389,3 +402,4 @@ export default class MainGame extends Phaser.Scene {
     updateProgressBar();
   }
 }
+
