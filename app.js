@@ -107,6 +107,43 @@ app.post("/register", async (req, res) => {
     });
 });
 
+// API pour la connexion d'un utilisateur
+app.post("/login", async (req, res) => {
+    const { pseudo, pwd } = req.body;
+  
+    db.get('SELECT * FROM user WHERE pseudo = ?', pseudo, async (err, row) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      } else {
+        if (!row) {
+          console.error("User " + pseudo + " not found !");
+          res.json({ success: false, message: 'Identifiants invalides.' });
+        } else {
+          try {
+            const isPasswordValid = await bcrypt.compare(pwd, row.pwd);
+            if (isPasswordValid) {
+              // Connexion réussie, créer une session utilisateur
+              req.session.user = {
+                id: row.id,
+                pseudo: row.pseudo,
+                mail: row.mail
+                // Ajoutez d'autres données utilisateur si nécessaire
+              };
+              res.json({ success: true, message: 'Connexion réussie.' });
+            } else {
+              console.error("Invalid password for user " + pseudo + " !");
+              res.json({ success: false, message: 'Identifiants invalides.' });
+            }
+          } catch (e) {
+            console.error(e);
+            res.redirect("/login");
+          }
+        }
+      }
+    });
+});
+
 // Démarrer le serveur
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
