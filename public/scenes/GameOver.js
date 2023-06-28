@@ -51,7 +51,7 @@ export default class GameOver extends Phaser.Scene {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: 4,
+        id: 4, // TODO à remplacer par l'id de l'user en cours
         score: this.score,
       }),
     })
