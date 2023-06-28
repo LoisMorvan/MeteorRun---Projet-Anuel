@@ -22,13 +22,16 @@ export default class MainGame extends Phaser.Scene {
 
   preload() {
     this.load.setPath("../assets/");
-    this.load.image("player", "player.png");
+    this.load.spritesheet("player", "playerfin.png", {
+      frameWidth: 113,
+      frameHeight: 139
+    });
     this.load.spritesheet('meteor', 'meteor.png', {
       frameWidth: 420,
       frameHeight: 580
     });
-    this.load.image("background", "sky.png");
-    this.load.image("ground", "platform.png");
+    this.load.image("background", "background.png");
+    this.load.image("ground", "ground.png");
     this.load.image("bubble", "bubble.png");
     this.load.image("slow-time", "clock.png");
     this.load.image("invincibility", "star.png");
@@ -40,11 +43,11 @@ export default class MainGame extends Phaser.Scene {
 
   create() {
     // Ajoute une image de fond
-    this.add.image(400, 300, "background").setScale(2);
+    this.add.image(200, 175, "background").setScale(1);
 
     // Ajoute le sol
     this.ground = this.physics.add.staticGroup();
-    this.ground.create(400, 600, "ground").setScale(2).refreshBody();
+    this.ground.create(400, 590, "ground").setScale(2).refreshBody();
 
     // Crée un sprite animé pour le GIF du bonus Slow Time
     this.slowTimeGif = this.add.sprite(400, 300, "reverse-clock");
@@ -70,16 +73,36 @@ export default class MainGame extends Phaser.Scene {
     // Crée le joueur
     this.player = this.physics.add
       .sprite(400, 500, "player")
-      .setScale(0.4)
+      .setScale(0.5)
       .setVelocityY(100);
     this.player.setCollideWorldBounds(true);
+
+    this.anims.create({
+      key: 'left',
+      frames: this.anims.generateFrameNumbers('player', { start: 0, end: 5 }),
+      frameRate: 10,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'stand',
+      frames: [{ key: 'player', frame: 6 }],
+      frameRate: 20
+    });
+
+    this.anims.create({
+      key: 'right',
+      frames: this.anims.generateFrameNumbers('player', { start: 8, end: 12 }),
+      frameRate: 10,
+      repeat: -1
+    });
 
     // Crée les météorites
     this.anims.create({
       key: 'meteor-animation',
       frames: this.anims.generateFrameNumbers('meteor', {
         start: 0,
-        end: 8-1, // Remplacez numFrames par le nombre total d'images du GIF
+        end: 8 - 1, // Remplacez numFrames par le nombre total d'images du GIF
       }),
       frameRate: 10, // Réglez la vitesse de l'animation selon vos besoins
       repeat: -1, // -1 pour répéter l'animation indéfiniment
@@ -126,10 +149,13 @@ export default class MainGame extends Phaser.Scene {
     // Déplace le joueur selon les flèches du clavier
     if (this.cursors.left.isDown) {
       this.player.setVelocityX(-300);
+      this.player.anims.play('left', true);
     } else if (this.cursors.right.isDown) {
       this.player.setVelocityX(300);
+      this.player.anims.play('right', true);
     } else {
       this.player.setVelocityX(0);
+      this.player.anims.play('stand');
     }
 
     // Met à jour le score
@@ -140,10 +166,6 @@ export default class MainGame extends Phaser.Scene {
     if (this.meteorTimer > this.meteorGenerationTime) {
       this.generateMeteor();
       this.meteorTimer = 0;
-    }
-
-    if (this.lastMeteorVelocityY > this.limitVelotcity) {
-      console.log("bite");
     }
 
     // Accélère la chute des météorites toutes les 10 secondes
@@ -293,7 +315,7 @@ export default class MainGame extends Phaser.Scene {
     // Crée l'image de la bulle
     this.bubbleImage = this.physics.add.image(1000, 1000, "bubble");
     this.bubbleImage.setCircle(126);
-    this.bubbleImage.setScale(0.5);
+    this.bubbleImage.setScale(0.4);
     // Gère la collision entre la bulle et les météorites
     this.physics.add.collider(this.bubbleImage, this.meteors, this.hitBubble, null, this);
   }

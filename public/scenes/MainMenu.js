@@ -15,17 +15,17 @@ export default class MainMenu extends Phaser.Scene {
       frameWidth: 420,
       frameHeight: 580
     });
-    this.load.image("background", "sky.png");
-    this.load.image("ground", "platform.png");
+    this.load.image("background", "background.png");
+    this.load.image("ground", "ground.png");
   }
 
   create() {
     // Ajoute une image de fond
-    this.add.image(400, 300, "background").setScale(2);
+    this.add.image(200, 175, "background").setScale(1);
 
     // Ajoute le sol
     this.ground = this.physics.add.staticGroup();
-    this.ground.create(400, 600, "ground").setScale(2).refreshBody();
+    this.ground.create(400, 590, "ground").setScale(2).refreshBody();
 
     // Crée les météorites
     this.anims.create({
