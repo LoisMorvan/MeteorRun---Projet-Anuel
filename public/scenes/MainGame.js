@@ -18,26 +18,31 @@ export default class MainGame extends Phaser.Scene {
     this.meteorGenerationTime = 1000;
     this.bubbleImage = null;
     this.bonusTimerEvent = null;
+    this.explosion = null;
   }
 
   preload() {
     this.load.setPath("../assets/");
-    this.load.spritesheet("player", "playerfin.png", {
+    this.load.spritesheet("player", "player.png", {
       frameWidth: 113,
-      frameHeight: 139
+      frameHeight: 139,
     });
-    this.load.spritesheet('meteor', 'meteor.png', {
+    this.load.spritesheet("meteor", "meteor.png", {
       frameWidth: 420,
-      frameHeight: 580
+      frameHeight: 580,
     });
     this.load.image("background", "background.png");
     this.load.image("ground", "ground.png");
     this.load.image("bubble", "bubble.png");
     this.load.image("slow-time", "clock.png");
     this.load.image("invincibility", "star.png");
-    this.load.spritesheet('reverse-clock', 'reverse-clock.png', {
+    this.load.spritesheet("reverse-clock", "reverse-clock.png", {
       frameWidth: 166, // Largeur d'une image du GIF
       frameHeight: 166, // Hauteur d'une image du GIF
+    });
+    this.load.spritesheet('explosion', 'explosion.png', {
+      frameWidth: 236, // Largeur d'une image du GIF
+      frameHeight: 176, // Hauteur d'une image du GIF
     });
   }
 
@@ -56,8 +61,8 @@ export default class MainGame extends Phaser.Scene {
 
     // Crée l'animation du GIF
     this.anims.create({
-      key: 'slow-time-animation',
-      frames: this.anims.generateFrameNumbers('reverse-clock', {
+      key: "slow-time-animation",
+      frames: this.anims.generateFrameNumbers("reverse-clock", {
         start: 0,
         end: 84 - 1, // Remplacez numFrames par le nombre total d'images du GIF
       }),
@@ -65,7 +70,25 @@ export default class MainGame extends Phaser.Scene {
       repeat: 0, // Ne pas répéter l'animation
     });
 
-    this.slowTimeGif.on('animationcomplete', this.hideSlowTimeGif, this);
+    this.slowTimeGif.on("animationcomplete", this.hideSlowTimeGif, this);
+
+    // Crée un sprite animé pour le GIF du bonus Slow Time
+    this.explosion = this.add.sprite(400, 300, "explosion");
+    this.explosion.setScale(0.5);
+    this.explosion.setVisible(false);
+
+    // Crée l'animation du GIF
+    this.anims.create({
+      key: "explosion-animation",
+      frames: this.anims.generateFrameNumbers("explosion", {
+        start: 0,
+        end: 5, // Remplacez numFrames par le nombre total d'images du GIF
+      }),
+      frameRate: 10, // Réglez la vitesse de l'animation selon vos besoins
+      repeat: 0, // Ne pas répéter l'animation
+    });
+
+    this.explosion.on("animationcomplete", this.hideExplosionGif, this);
 
     this.progressBar = this.add.graphics();
     this.progressDuration = 4500;
@@ -78,29 +101,29 @@ export default class MainGame extends Phaser.Scene {
     this.player.setCollideWorldBounds(true);
 
     this.anims.create({
-      key: 'left',
-      frames: this.anims.generateFrameNumbers('player', { start: 0, end: 5 }),
+      key: "left",
+      frames: this.anims.generateFrameNumbers("player", { start: 0, end: 5 }),
       frameRate: 10,
-      repeat: -1
+      repeat: -1,
     });
 
     this.anims.create({
-      key: 'stand',
-      frames: [{ key: 'player', frame: 6 }],
-      frameRate: 20
+      key: "stand",
+      frames: [{ key: "player", frame: 6 }],
+      frameRate: 20,
     });
 
     this.anims.create({
-      key: 'right',
-      frames: this.anims.generateFrameNumbers('player', { start: 8, end: 12 }),
+      key: "right",
+      frames: this.anims.generateFrameNumbers("player", { start: 8, end: 12 }),
       frameRate: 10,
-      repeat: -1
+      repeat: -1,
     });
 
     // Crée les météorites
     this.anims.create({
-      key: 'meteor-animation',
-      frames: this.anims.generateFrameNumbers('meteor', {
+      key: "meteor-animation",
+      frames: this.anims.generateFrameNumbers("meteor", {
         start: 0,
         end: 8 - 1, // Remplacez numFrames par le nombre total d'images du GIF
       }),
@@ -126,7 +149,7 @@ export default class MainGame extends Phaser.Scene {
       callback: this.generateBonus,
       callbackScope: this,
       loop: true,
-      paused: false
+      paused: false,
     });
 
     // Gère la collision entre les météorites, le joueur et le sol
@@ -140,22 +163,27 @@ export default class MainGame extends Phaser.Scene {
     this.physics.add.collider(this.player, this.ground);
     this.physics.add.collider(this.meteors, this.ground);
     // Gère la collision entre le joueur et les bonus
-    this.physics.add.overlap(this.player, this.bonuses, this.collectBonus, null, this);
+    this.physics.add.overlap(
+      this.player,
+      this.bonuses,
+      this.collectBonus,
+      null,
+      this
+    );
     this.physics.add.collider(this.bonuses, this.ground);
-
   }
 
   update(time, delta) {
     // Déplace le joueur selon les flèches du clavier
     if (this.cursors.left.isDown) {
       this.player.setVelocityX(-300);
-      this.player.anims.play('left', true);
+      this.player.anims.play("left", true);
     } else if (this.cursors.right.isDown) {
       this.player.setVelocityX(300);
-      this.player.anims.play('right', true);
+      this.player.anims.play("right", true);
     } else {
       this.player.setVelocityX(0);
-      this.player.anims.play('stand');
+      this.player.anims.play("stand");
     }
 
     // Met à jour le score
@@ -180,11 +208,13 @@ export default class MainGame extends Phaser.Scene {
       }
     }
 
-
     // Vérifie si les météorites touchent le sol
     this.meteors.getChildren().forEach((meteor) => {
       if (meteor.body.touching.down && meteor.active) {
         meteor.destroy();
+        this.explosion.setPosition(meteor.x, meteor.y + 18);
+        this.explosion.setVisible(true);
+        this.explosion.play("explosion-animation");
         this.score += 1;
       }
     });
@@ -203,6 +233,10 @@ export default class MainGame extends Phaser.Scene {
     }
   }
 
+  hideExplosionGif() {
+    this.explosion.setVisible(false);
+  }
+
   generateMeteor() {
     if (!this.gameOver) {
       var x = Phaser.Math.Between(0, 800);
@@ -211,7 +245,7 @@ export default class MainGame extends Phaser.Scene {
       meteor.setCollideWorldBounds(true);
       meteor.setBounce(1);
       meteor.setGravityY(0);
-      meteor.play('meteor-animation');
+      meteor.play("meteor-animation");
       if (this.lastMeteorVelocityYAccelerated) {
         meteor.velocityYBeforeAccelerate = this.lastMeteorVelocityY;
       }
@@ -267,7 +301,9 @@ export default class MainGame extends Phaser.Scene {
           var bonusType = Phaser.Math.Between(0, 2);
         }
         var x = Phaser.Math.Between(0, 800);
-        var bonus = this.bonuses.create(x, 0, this.getBonusTexture(bonusType)).setScale(0.15);
+        var bonus = this.bonuses
+          .create(x, 0, this.getBonusTexture(bonusType))
+          .setScale(0.15);
         bonus.setVelocityY(100);
         bonus.setCollideWorldBounds(true);
         bonus.setBounce(1);
@@ -317,7 +353,13 @@ export default class MainGame extends Phaser.Scene {
     this.bubbleImage.setCircle(126);
     this.bubbleImage.setScale(0.4);
     // Gère la collision entre la bulle et les météorites
-    this.physics.add.collider(this.bubbleImage, this.meteors, this.hitBubble, null, this);
+    this.physics.add.collider(
+      this.bubbleImage,
+      this.meteors,
+      this.hitBubble,
+      null,
+      this
+    );
   }
 
   hitBubble(bubble, meteor) {
@@ -413,7 +455,12 @@ export default class MainGame extends Phaser.Scene {
 
       if (progress <= 1) {
         // Appeler la fonction de mise à jour à nouveau après un court délai
-        this.time.delayedCall(this.progressDuration / 100, updateProgressBar, [], this);
+        this.time.delayedCall(
+          this.progressDuration / 100,
+          updateProgressBar,
+          [],
+          this
+        );
       } else {
         // La progression est terminée, effacer la barre
         this.progressBar.clear();
@@ -424,4 +471,3 @@ export default class MainGame extends Phaser.Scene {
     updateProgressBar();
   }
 }
-

@@ -19,7 +19,7 @@ export default class MainMenu extends Phaser.Scene {
     this.load.image("background", "background.png");
     this.load.image("ground", "ground.png");
     this.load.spritesheet('explosion', 'explosion.png', {
-      frameWidth: 283, // Largeur d'une image du GIF
+      frameWidth: 236, // Largeur d'une image du GIF
       frameHeight: 176, // Hauteur d'une image du GIF
     });
   }
@@ -66,7 +66,7 @@ export default class MainMenu extends Phaser.Scene {
         start: 0,
         end: 5, // Remplacez numFrames par le nombre total d'images du GIF
       }),
-      frameRate: 5, // Réglez la vitesse de l'animation selon vos besoins
+      frameRate: 10, // Réglez la vitesse de l'animation selon vos besoins
       repeat: 0, // Ne pas répéter l'animation
     });
 
@@ -99,7 +99,7 @@ export default class MainMenu extends Phaser.Scene {
     this.meteors.getChildren().forEach((meteor) => {
       if (meteor.body.touching.down && meteor.active) {
         meteor.destroy();
-        this.explosion.setPosition(meteor.x, meteor.y + 25);
+        this.explosion.setPosition(meteor.x, meteor.y + 18);
         this.explosion.setVisible(true);
         this.explosion.play("explosion-animation");
       }
