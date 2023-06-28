@@ -28,8 +28,8 @@ export default class MainGame extends Phaser.Scene {
       frameHeight: 139,
     });
     this.load.spritesheet("meteor", "meteor.png", {
-      frameWidth: 420,
-      frameHeight: 580,
+      frameWidth: 200,
+      frameHeight: 276,
     });
     this.load.image("background", "background.png");
     this.load.image("ground", "ground.png");
@@ -240,7 +240,7 @@ export default class MainGame extends Phaser.Scene {
   generateMeteor() {
     if (!this.gameOver) {
       var x = Phaser.Math.Between(0, 800);
-      var meteor = this.meteors.create(x, 0, "meteor").setScale(0.12);
+      var meteor = this.meteors.create(x, 0, "meteor").setScale(0.22);
       meteor.setVelocityY(this.lastMeteorVelocityY);
       meteor.setCollideWorldBounds(true);
       meteor.setBounce(1);
