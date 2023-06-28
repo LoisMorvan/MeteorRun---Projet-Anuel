@@ -7,6 +7,7 @@ export default class MainMenu extends Phaser.Scene {
     this.meteorTimer = 0;
     this.meteorAcceleration = 1.2;
     this.meteorGenerationTime = null;
+    this.explosion = null;
   }
 
   preload() {
@@ -14,6 +15,10 @@ export default class MainMenu extends Phaser.Scene {
     this.load.image("meteor", "meteor.png");
     this.load.image("background", "sky.png");
     this.load.image("ground", "platform.png");
+    this.load.spritesheet('explosion', 'explosion.png', {
+      frameWidth: 283, // Largeur d'une image du GIF
+      frameHeight: 176, // Hauteur d'une image du GIF
+    });
   }
 
   create() {
@@ -36,6 +41,24 @@ export default class MainMenu extends Phaser.Scene {
     this.playText.on("pointerdown", () => {
       this.scene.start("MainGame");
     });
+
+    // Crée un sprite animé pour le GIF du bonus Slow Time
+    this.explosion = this.add.sprite(400, 300, "explosion");
+    this.explosion.setScale(0.5);
+    this.explosion.setVisible(false);
+
+    // Crée l'animation du GIF
+    this.anims.create({
+      key: 'explosion-animation',
+      frames: this.anims.generateFrameNumbers('explosion', {
+        start: 0,
+        end: 5, // Remplacez numFrames par le nombre total d'images du GIF
+      }),
+      frameRate: 5, // Réglez la vitesse de l'animation selon vos besoins
+      repeat: 0, // Ne pas répéter l'animation
+    });
+
+    this.explosion.on('animationcomplete', this.hideExplosionGif, this);
 
     // Crée le texte du score
     this.classementText = this.add.text(300, 330, "CLASSEMENT", {
@@ -61,9 +84,12 @@ export default class MainMenu extends Phaser.Scene {
     }
 
     // Vérifie si les météorites touche le sol
-    this.meteors.getChildren().forEach(function (meteor) {
+    this.meteors.getChildren().forEach((meteor) => {
       if (meteor.body.touching.down && meteor.active) {
         meteor.destroy();
+        this.explosion.setPosition(meteor.x, meteor.y + 25);
+        this.explosion.setVisible(true);
+        this.explosion.play("explosion-animation");
       }
     });
   }
@@ -77,6 +103,10 @@ export default class MainMenu extends Phaser.Scene {
       meteor.setBounce(1);
       meteor.setGravityY(0);
     }
+  }
+
+  hideExplosionGif() {
+    this.explosion.setVisible(false);
   }
 
   showClassement() {
