@@ -12,7 +12,7 @@ export const config = {
     default: "arcade",
     arcade: {
       gravity: { y: 0 },
-      debug: false,
+      debug: true,
     },
   },
   scene: [MainMenu, MainGame, GameOver, Classement],

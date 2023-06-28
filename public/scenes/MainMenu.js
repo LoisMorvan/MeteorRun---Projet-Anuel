@@ -12,9 +12,12 @@ export default class MainMenu extends Phaser.Scene {
 
   preload() {
     this.load.setPath("../assets/");
-    this.load.image("meteor", "meteor.png");
-    this.load.image("background", "sky.png");
-    this.load.image("ground", "platform.png");
+    this.load.spritesheet('meteor', 'meteor.png', {
+      frameWidth: 420,
+      frameHeight: 580
+    });
+    this.load.image("background", "background.png");
+    this.load.image("ground", "ground.png");
     this.load.spritesheet('explosion', 'explosion.png', {
       frameWidth: 283, // Largeur d'une image du GIF
       frameHeight: 176, // Hauteur d'une image du GIF
@@ -23,13 +26,22 @@ export default class MainMenu extends Phaser.Scene {
 
   create() {
     // Ajoute une image de fond
-    this.add.image(400, 300, "background").setScale(2);
+    this.add.image(200, 175, "background").setScale(1);
 
     // Ajoute le sol
     this.ground = this.physics.add.staticGroup();
-    this.ground.create(400, 600, "ground").setScale(2).refreshBody();
+    this.ground.create(400, 590, "ground").setScale(2).refreshBody();
 
     // Crée les météorites
+    this.anims.create({
+      key: 'meteor-animation',
+      frames: this.anims.generateFrameNumbers('meteor', {
+        start: 0,
+        end: 8-1, // Remplacez numFrames par le nombre total d'images du GIF
+      }),
+      frameRate: 8, // Réglez la vitesse de l'animation selon vos besoins
+      repeat: -1, // -1 pour répéter l'animation indéfiniment
+    });
     this.meteors = this.physics.add.group();
 
     // Crée le texte du score
@@ -97,11 +109,12 @@ export default class MainMenu extends Phaser.Scene {
   generateMeteor() {
     if (!this.gameOver) {
       var x = Phaser.Math.Between(0, 800);
-      var meteor = this.meteors.create(x, 0, "meteor").setScale(0.04);
+      var meteor = this.meteors.create(x, 0, "meteor").setScale(0.12);
       meteor.setVelocityY(Phaser.Math.Between(200, 900));
       meteor.setCollideWorldBounds(true);
       meteor.setBounce(1);
       meteor.setGravityY(0);
+      meteor.play('meteor-animation');
     }
   }
 
