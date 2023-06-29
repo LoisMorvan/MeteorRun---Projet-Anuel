@@ -12,6 +12,8 @@ export default class MainMenu extends Phaser.Scene {
 
   preload() {
     this.load.setPath("../assets/");
+    this.load.image("btn", "btn.png");
+    this.load.image("btnHover", "btnHover.png");
     this.load.spritesheet('meteor', 'meteor.png', {
       frameWidth: 200,
       frameHeight: 276
@@ -37,7 +39,7 @@ export default class MainMenu extends Phaser.Scene {
       key: 'meteor-animation',
       frames: this.anims.generateFrameNumbers('meteor', {
         start: 0,
-        end: 8-1, // Remplacez numFrames par le nombre total d'images du GIF
+        end: 8 - 1, // Remplacez numFrames par le nombre total d'images du GIF
       }),
       frameRate: 8, // Réglez la vitesse de l'animation selon vos besoins
       repeat: -1, // -1 pour répéter l'animation indéfiniment
@@ -45,14 +47,25 @@ export default class MainMenu extends Phaser.Scene {
     this.meteors = this.physics.add.group();
 
     // Crée le texte du score
-    this.playText = this.add.text(350, 270, "PLAY", {
-      fontSize: "32px",
-      fill: "#000",
-    });
-    this.playText.setInteractive();
-    this.playText.on("pointerdown", () => {
-      this.scene.start("MainGame");
-    });
+    // this.playText = this.add.text(350, 270, "PLAY", {
+    //   fontSize: "32px",
+    //   fill: "#000",
+    // });
+    // this.playText.setInteractive();
+    // this.playText.on("pointerdown", () => {
+    //   this.scene.start("MainGame");
+    // });
+
+    // // Crée le texte du score
+    // this.classementText = this.add.text(300, 330, "CLASSEMENT", {
+    //   fontSize: "32px",
+    //   fill: "#000",
+    // });
+    // this.classementText.setInteractive();
+    // this.classementText.on("pointerdown", () => {
+    //   this.showClassement();
+    // });
+    this.createMainMenuButtons();
 
     // Crée un sprite animé pour le GIF du bonus Slow Time
     this.explosion = this.add.sprite(400, 300, "explosion");
@@ -71,16 +84,6 @@ export default class MainMenu extends Phaser.Scene {
     });
 
     this.explosion.on('animationcomplete', this.hideExplosionGif, this);
-
-    // Crée le texte du score
-    this.classementText = this.add.text(300, 330, "CLASSEMENT", {
-      fontSize: "32px",
-      fill: "#000",
-    });
-    this.classementText.setInteractive();
-    this.classementText.on("pointerdown", () => {
-      this.showClassement();
-    });
 
     // Gère les collision entre les météorites et le sol
     this.physics.add.collider(this.meteors, this.ground);
@@ -125,7 +128,69 @@ export default class MainMenu extends Phaser.Scene {
   showClassement() {
     // Show classement scene as overlay
     this.scene.launch("Classement");
-    this.playText.disableInteractive();
-    this.classementText.disableInteractive();
+    this.btn_play.disableInteractive();
+    this.btn_classement.disableInteractive();
+  }
+
+  createMainMenuButtons() {
+    this.btn_play = this.createButton(
+      400,
+      259,
+      this.clickPlay
+    );
+
+    this.label_play = this.add.text(
+      this.btn_play.getData("centerX") - 40,
+      this.btn_play.getData("centerY") - 28,
+      "Play",
+      {
+        fontSize: "40px",
+        fill: "#FFF",
+        fontFamily: "Comic Sans MS",
+      }
+    );
+
+    this.btn_classement = this.createButton(
+      400,
+      341,
+      this.clickClassement
+    );
+
+    this.label_classement = this.add.text(
+      this.btn_classement.getData("centerX") - 70,
+      this.btn_classement.getData("centerY") - 28,
+      "Ranking",
+      {
+        fontSize: "40px",
+        fill: "#FFF",
+        fontFamily: "Comic Sans MS",
+      }
+    );
+  }
+
+  createButton(centerX, centerY, callback) {
+    const btn = this.add.image(centerX, centerY, "btn").setScale(2);
+    btn.setInteractive();
+    btn.on('pointerover', () => {
+      btn.setTexture('btnHover');
+    });
+
+    btn.on('pointerout', () => {
+      btn.setTexture('btn');
+    });
+    btn.on("pointerdown", callback, this);
+
+    btn.setData("centerX", centerX);
+    btn.setData("centerY", centerY);
+
+    return btn;
+  }
+
+  clickClassement() {
+    this.showClassement();
+  }
+
+  clickPlay() {
+    this.scene.start("MainGame");
   }
 }
