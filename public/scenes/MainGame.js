@@ -138,6 +138,12 @@ export default class MainGame extends Phaser.Scene {
       repeat: 0,
     });
 
+    this.playerdeath.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame, sprite, frameKey) => {
+      if(frame.textureFrame == 4) {
+        this.playerdeath.setPosition(this.playerdeath.x, this.playerdeath.y + 10);
+      }
+    });
+
     // Crée les météorites
     this.anims.create({
       key: "meteor-animation",
