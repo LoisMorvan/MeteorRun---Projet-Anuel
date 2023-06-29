@@ -31,6 +31,10 @@ export default class MainGame extends Phaser.Scene {
       frameWidth: 200,
       frameHeight: 276,
     });
+    this.load.spritesheet("playerdeath", "playerdeath.png", {
+      frameWidth: 164,
+      frameHeight: 134,
+    });
     this.load.image("background", "background.png");
     this.load.image("ground", "ground.png");
     this.load.image("bubble", "bubble.png");
@@ -82,7 +86,7 @@ export default class MainGame extends Phaser.Scene {
       key: "explosion-animation",
       frames: this.anims.generateFrameNumbers("explosion", {
         start: 0,
-        end: 5, // Remplacez numFrames par le nombre total d'images du GIF
+        end: 4, // Remplacez numFrames par le nombre total d'images du GIF
       }),
       frameRate: 10, // Réglez la vitesse de l'animation selon vos besoins
       repeat: 0, // Ne pas répéter l'animation
@@ -99,6 +103,13 @@ export default class MainGame extends Phaser.Scene {
       .setScale(0.5)
       .setVelocityY(100);
     this.player.setCollideWorldBounds(true);
+    
+
+    this.playerdeath = this.physics.add
+      .sprite(400,500, "playerdeath")
+      .setScale(0.5)
+      .setVelocity(100)
+      .setVisible(false);
 
     this.anims.create({
       key: "left",
@@ -115,9 +126,16 @@ export default class MainGame extends Phaser.Scene {
 
     this.anims.create({
       key: "right",
-      frames: this.anims.generateFrameNumbers("player", { start: 8, end: 12 }),
+      frames: this.anims.generateFrameNumbers("player", { start: 8, end: 11 }),
       frameRate: 10,
       repeat: -1,
+    });
+
+    this.anims.create({
+      key: "death",
+      frames: this.anims.generateFrameNumbers("playerdeath", { start: 0, end: 4 }),
+      frameRate: 5,
+      repeat: 0,
     });
 
     // Crée les météorites
@@ -257,7 +275,13 @@ export default class MainGame extends Phaser.Scene {
     if (this.gameOver == true) return;
 
     this.physics.pause();
-    this.player.setTint(0xff0000);
+
+    // Affiche l'animation de mort du personnage
+    this.player.setVisible(false);
+    this.playerdeath.setVisible(true);
+    this.playerdeath.setPosition(this.player.x, this.player.y);
+    this.playerdeath.anims.play("death");
+    
     this.gameOver = true;
 
     this.time.addEvent({
