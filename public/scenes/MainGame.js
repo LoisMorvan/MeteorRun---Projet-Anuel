@@ -24,8 +24,8 @@ export default class MainGame extends Phaser.Scene {
   preload() {
     this.load.setPath("../assets/");
     this.load.spritesheet("player", "player.png", {
-      frameWidth: 113,
-      frameHeight: 139,
+      frameWidth: 100.001,
+      frameHeight: 138,
     });
     this.load.spritesheet("meteor", "meteor.png", {
       frameWidth: 200,
