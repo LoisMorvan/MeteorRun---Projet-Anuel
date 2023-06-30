@@ -41,7 +41,7 @@ export default class MainMenu extends Phaser.Scene {
         start: 0,
         end: 8 - 1, // Remplacez numFrames par le nombre total d'images du GIF
       }),
-      frameRate: 8, // Réglez la vitesse de l'animation selon vos besoins
+      frameRate: 10, // Réglez la vitesse de l'animation selon vos besoins
       repeat: -1, // -1 pour répéter l'animation indéfiniment
     });
     this.meteors = this.physics.add.group();
@@ -166,6 +166,11 @@ export default class MainMenu extends Phaser.Scene {
         fontFamily: "Comic Sans MS",
       }
     );
+    this.btn_play.setDepth(1);
+    this.label_play.setDepth(1);
+  
+    this.btn_classement.setDepth(1);
+    this.label_classement.setDepth(1);
   }
 
   createButton(centerX, centerY, callback) {
