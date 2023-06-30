@@ -9,6 +9,13 @@ export default class GameOver extends Phaser.Scene {
     this.score = data.score;
   }
 
+  preload() {
+    this.load.setPath("../assets/");
+    this.load.image("gameoverBg", "gameoverBg.png");
+    this.load.image("btn", "btn.png");
+    this.load.image("btnHover", "btnHover.png");
+  }
+
   create() {
     const x = config.width - 100;
     const w = config.width - 2 * x;
@@ -16,24 +23,24 @@ export default class GameOver extends Phaser.Scene {
     const y = config.height - 140;
     const h = config.height - 2 * y;
 
-    this.background = this.add.graphics({ x: x, y: y });
-    this.background.fillStyle("0xFFF092", 1);
-    this.background.fillRoundedRect(0, 0, w, h, 0);
+    this.background = this.add.image(400, 300, "gameoverBg");
 
     // Game over title
-    this.title = this.add.text(200, y + 0.9 * h, "GAME OVER", {
-      fontSize: "75px",
+    this.title = this.add.text(180, y + 0.9 * h, "GAME OVER", {
+      fontSize: "70px",
       fill: "#000",
+      fontFamily: "Comic Sans MS",
     });
 
     // Score title
     this.text_score = this.add.text(
-      x + 0.7 * w,
+      x + 0.65 * w,
       y + 0.6 * h,
       "Score : " + this.score,
       {
-        fontSize: "40px",
+        fontSize: "35px",
         fill: "#000",
+        fontFamily: "Comic Sans MS",
       }
     );
 
@@ -51,7 +58,7 @@ export default class GameOver extends Phaser.Scene {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: 4,
+        id: 4, // TODO à remplacer par l'id de l'user en cours
         score: this.score,
       }),
     })
@@ -74,11 +81,12 @@ export default class GameOver extends Phaser.Scene {
 
     this.label_menu = this.add.text(
       this.btn_menu.getData("centerX") - 50,
-      this.btn_menu.getData("centerY") - 20,
+      this.btn_menu.getData("centerY") - 28,
       "Menu",
       {
         fontSize: "40px",
         fill: "#FFF",
+        fontFamily: "Comic Sans MS",
       }
     );
 
@@ -89,53 +97,31 @@ export default class GameOver extends Phaser.Scene {
     );
 
     this.label_retry = this.add.text(
-      this.btn_retry.getData("centerX") - 57,
-      this.btn_retry.getData("centerY") - 20,
+      this.btn_retry.getData("centerX") - 50,
+      this.btn_retry.getData("centerY") - 28,
       "Retry",
       {
         fontSize: "40px",
         fill: "#FFF",
+        fontFamily: "Comic Sans MS",
       }
     );
   }
 
   createButton(centerX, centerY, callback) {
-    const w = 4.5 * 50;
-    const h = 2 * 50;
-    const r = 10;
+    const btn = this.add.image(centerX, centerY, "btn").setScale(2);
+    btn.setInteractive();
+    btn.on('pointerover', () => {
+        btn.setTexture('btnHover');
+    });
 
-    const x = centerX - 0.5 * w;
-    const y = centerY - 0.5 * h;
+    btn.on('pointerout', () => {
+        btn.setTexture('btn');
+    });
+    btn.on("pointerdown", callback, this);
 
-    const btn = this.add.graphics({ x: x, y: y });
-
-    btn.fillStyle("0x387155", 1);
-    btn.fillRoundedRect(0, 0, w, h, r);
-
-    btn.setDataEnabled();
     btn.setData("centerX", centerX);
     btn.setData("centerY", centerY);
-
-    // Button imputs
-    const hit_area = new Phaser.Geom.Rectangle(0, 0, w, h);
-    btn.setInteractive(hit_area, Phaser.Geom.Rectangle.Contains);
-
-    // Gestion visuelle du clic sur le bouton
-    btn.myDownCallback = () => {
-      btn.clear();
-      btn.fillStyle("0x60BFB8", 1);
-      btn.fillRoundedRect(0, 0, w, h, r);
-    };
-
-    btn.myOutCallback = () => {
-      btn.clear();
-      btn.fillStyle("0x387155", 1);
-      btn.fillRoundedRect(0, 0, w, h, r);
-    };
-
-    btn.on("pointerup", callback, this);
-    btn.on("pointerdown", btn.myDownCallback, this);
-    btn.on("pointerout", btn.myOutCallback, this);
 
     return btn;
   }

@@ -23,6 +23,13 @@ export default class Classement extends Phaser.Scene {
             });
     }
 
+    preload() {
+        this.load.setPath("../assets/");
+        this.load.image("classementBg", "classementBg.png");
+        this.load.image("btn", "btn.png");
+        this.load.image("btnHover", "btnHover.png");
+    }
+
     create() {
         const x = config.width - 100;
         const w = config.width - 2 * x;
@@ -30,18 +37,17 @@ export default class Classement extends Phaser.Scene {
         const y = config.height - 50;
         const h = config.height - 2 * y;
 
-        this.background = this.add.graphics({ x: x, y: y });
-        this.background.fillStyle("0xFFF092", 1);
-        this.background.fillRoundedRect(0, 0, w, h, 0);
+        this.background = this.add.image(400, 300, "classementBg");
 
         // Titre du classement
-        this.title = this.add.text(300, y + 0.95 * h, "Classement", {
+        this.title = this.add.text(320, y + 0.98 * h, "Ranking", {
             fontSize: "40px",
             fill: "#000",
+            fontFamily: "Comic Sans MS",
         });
 
         // Libellés des colonnes
-        this.addColumnLabel(220, 120, "Rang");
+        this.addColumnLabel(220, 120, "Rank");
         this.addColumnLabel(350, 120, "Pseudo");
         this.addColumnLabel(540, 120, "Score");
 
@@ -70,7 +76,7 @@ export default class Classement extends Phaser.Scene {
         this.add.text(x, y, label, {
             fontSize: "20px",
             fill: "#000",
-            fontStyle: "bold",
+            fontFamily: "Comic Sans MS",
         });
     }
 
@@ -78,6 +84,7 @@ export default class Classement extends Phaser.Scene {
         this.add.text(x, y, text, {
             fontSize: "20px",
             fill: "#000",
+            fontFamily: "Comic Sans MS",
         });
     }
 
@@ -93,19 +100,24 @@ export default class Classement extends Phaser.Scene {
             buttonY,
             "Menu",
             {
-                fontSize: "20px",
+                fontSize: "40px",
                 fill: "#FFF",
+                fontFamily: "Comic Sans MS",
             }
         ).setOrigin(0.5);
     }
 
 
     createButton(centerX, centerY, callback) {
-        const btn = this.add.graphics();
-        btn.fillStyle("0x387155", 1);
-        btn.fillRoundedRect(centerX - 100, centerY - 30, 200, 60, 10);
-        btn.setInteractive(new Phaser.Geom.Rectangle(centerX - 100, centerY - 30, 200, 60), Phaser.Geom.Rectangle.Contains);
+        const btn = this.add.image(centerX, centerY, "btn").setScale(2);
+        btn.setInteractive();
+        btn.on('pointerover', () => {
+            btn.setTexture('btnHover');
+        });
 
+        btn.on('pointerout', () => {
+            btn.setTexture('btn');
+        });
         btn.on("pointerdown", callback, this);
 
         btn.setData("centerX", centerX);
