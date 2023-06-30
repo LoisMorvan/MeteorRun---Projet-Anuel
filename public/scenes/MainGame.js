@@ -235,7 +235,7 @@ export default class MainGame extends Phaser.Scene {
 
     // Vérifie si les météorites touchent le sol
     this.meteors.getChildren().forEach((meteor) => {
-      if (meteor.body.touching.down && meteor.active) {
+      if ((meteor.body.touching.left || meteor.body.touching.right || meteor.body.touching.down || meteor.body.touching.up) && meteor.active) {
         meteor.destroy();
         this.explosion.setPosition(meteor.x, meteor.y + 18);
         this.explosion.setVisible(true);
@@ -280,7 +280,7 @@ export default class MainGame extends Phaser.Scene {
   hitMeteor() {
     // Arrête le jeu
     if (this.gameOver == true) return;
-
+    this.score -= 1;
     this.physics.pause();
 
     // Affiche l'animation de mort du personnage
