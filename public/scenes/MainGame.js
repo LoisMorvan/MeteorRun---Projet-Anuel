@@ -23,6 +23,13 @@ export default class MainGame extends Phaser.Scene {
 
   preload() {
     this.load.setPath("../assets/");
+    this.load.audio('music', 'Run Away Theme.wav');
+    this.load.audio('exploSound', 'explosion.mp3');
+    this.load.audio('starSound', 'star.mp3');
+    this.load.audio('timeInSound', 'timeIn.mp3');
+    this.load.audio('timeOutSound', 'timeOut.mp3');
+    this.load.audio('bubbleSound', 'bubble.mp3');
+    this.load.audio('oofSound', 'oof.mp3');
     this.load.spritesheet("player", "player.png", {
       frameWidth: 100.001,
       frameHeight: 138,
@@ -53,6 +60,17 @@ export default class MainGame extends Phaser.Scene {
   create() {
     // Ajoute une image de fond
     this.add.image(200, 175, "background").setScale(1);
+
+    // Ajoute une musique de fond
+    this.music = this.sound.add('music', { loop: true });
+    this.music.play();
+
+    this.exploSound = this.sound.add('exploSound', { loop: false, volume: 0.33 });
+    this.starSound = this.sound.add('starSound', { loop: true, volume: 0.7 });
+    this.bubbleSound = this.sound.add('bubbleSound', { loop: false, volume: 0.66 });
+    this.timeInSound = this.sound.add('timeInSound', { loop: false, volume: 0.8 });
+    this.timeOutSound = this.sound.add('timeOutSound', { loop: false, volume: 0.8 });
+    this.oofSound = this.sound.add('oofSound', { loop: false, volume: 0.8 });
 
     // Ajoute le sol
     this.ground = this.physics.add.staticGroup();
@@ -240,6 +258,7 @@ export default class MainGame extends Phaser.Scene {
         this.explosion.setPosition(meteor.x, meteor.y + 18);
         this.explosion.setVisible(true);
         this.explosion.play("explosion-animation");
+        this.exploSound.play();
         this.score += 1;
       }
     });
@@ -288,6 +307,8 @@ export default class MainGame extends Phaser.Scene {
     this.playerdeath.setVisible(true);
     this.playerdeath.setPosition(this.player.x, this.player.y);
     this.playerdeath.anims.play("death");
+    this.oofSound.play();
+    this.music.stop();
     
     this.gameOver = true;
 
@@ -313,7 +334,9 @@ export default class MainGame extends Phaser.Scene {
   }
 
   handleGoMenu() {
+    this.sound.stopAll();
     this.closeGameOver();
+    this.sound.stopAll();
     this.scene.start("MainMenu");
   }
 
@@ -379,6 +402,7 @@ export default class MainGame extends Phaser.Scene {
     this.isBonusActive = false;
     this.isBubbleActive = true;
     this.bonusTimerEvent.paused = false;
+    this.bubbleSound.play();
     // Crée l'image de la bulle
     this.bubbleImage = this.physics.add.image(1000, 1000, "bubble");
     this.bubbleImage.setCircle(126);
@@ -397,6 +421,7 @@ export default class MainGame extends Phaser.Scene {
     // Détruit la bulle et la météorite
     bubble.destroy();
     meteor.destroy();
+    this.bubbleSound.play();
     this.isBubbleActive = false;
   }
 
@@ -408,6 +433,8 @@ export default class MainGame extends Phaser.Scene {
     this.slowTimeGif.setPosition(370, 300);
     this.slowTimeGif.setVisible(true);
     this.slowTimeGif.play("slow-time-animation");
+    this.timeInSound.play();
+    this.music.setRate(0.8);
 
     // Démarre la barre de progression
     this.startProgressBar();
@@ -424,10 +451,16 @@ export default class MainGame extends Phaser.Scene {
     this.lastMeteorVelocityY /= 2;
     this.meteorGenerationTime *= 2;
 
+    this.time.delayedCall(4500, () => {
+      this.timeOutSound.play();
+    });
+
+
     this.time.delayedCall(5000, () => {
       this.bonusTimerEvent.paused = false;
       this.isBonusActive = false;
       this.player.clearTint();
+      this.music.setRate(1);
 
       // Restaurer la vitesse et le temps de génération d'origine
       this.lastMeteorVelocityY = originalVelocityY;
@@ -443,6 +476,8 @@ export default class MainGame extends Phaser.Scene {
     this.isBonusActive = true;
     this.bonusTimerEvent.paused = true;
     this.meteorCollider.active = false;
+    this.music.pause();
+    this.starSound.play();
 
     // Démarre la barre de progression
     this.startProgressBar();
@@ -452,6 +487,8 @@ export default class MainGame extends Phaser.Scene {
       this.meteorCollider.active = true;
       this.bonusTimerEvent.paused = false;
       this.isBonusActive = false;
+      this.starSound.stop();
+      this.music.resume();
       this.player.clearTint();
     });
   }
