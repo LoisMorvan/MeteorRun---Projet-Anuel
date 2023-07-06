@@ -127,6 +127,7 @@ export default class Classement extends Phaser.Scene {
 
   clickMenu() {
     // Revenir au menu principal
+    this.sound.stopAll();
     this.resetInteractive(this.context);
     this.scene.stop("Classement");
   }

@@ -12,6 +12,8 @@ export default class MainMenu extends Phaser.Scene {
 
   preload() {
     this.load.setPath("../assets/");
+    this.load.audio("music", "Run Away Theme.wav");
+    this.load.audio("exploSound", "explosion.mp3");
     this.load.image("btn", "btn.png");
     this.load.image("btn_blue", "btn-blue.png");
     this.load.image("btnHover", "btnHover.png");
@@ -35,6 +37,15 @@ export default class MainMenu extends Phaser.Scene {
     this.ground = this.physics.add.staticGroup();
     this.ground.create(400, 590, "ground").setScale(2).refreshBody();
 
+    // Ajoute une musique de fond
+    this.music = this.sound.add("music", { loop: true });
+    this.music.play();
+
+    this.exploSound = this.sound.add("exploSound", {
+      loop: false,
+      volume: 0.33,
+    });
+
     // Crée les météorites
     this.anims.create({
       key: "meteor-animation",
@@ -42,7 +53,7 @@ export default class MainMenu extends Phaser.Scene {
         start: 0,
         end: 8 - 1, // Remplacez numFrames par le nombre total d'images du GIF
       }),
-      frameRate: 8, // Réglez la vitesse de l'animation selon vos besoins
+      frameRate: 10, // Réglez la vitesse de l'animation selon vos besoins
       repeat: -1, // -1 pour répéter l'animation indéfiniment
     });
     this.meteors = this.physics.add.group();
@@ -106,6 +117,7 @@ export default class MainMenu extends Phaser.Scene {
         this.explosion.setPosition(meteor.x, meteor.y + 18);
         this.explosion.setVisible(true);
         this.explosion.play("explosion-animation");
+        this.exploSound.play();
       }
     });
   }
@@ -149,6 +161,9 @@ export default class MainMenu extends Phaser.Scene {
       }
     );
 
+    this.btn_play.setDepth(1);
+    this.label_play.setDepth(1);
+
     this.btn_classement = this.createButton(400, 341, this.clickClassement);
 
     this.label_classement = this.add.text(
@@ -161,6 +176,9 @@ export default class MainMenu extends Phaser.Scene {
         fontFamily: "Comic Sans MS",
       }
     );
+
+    this.btn_classement.setDepth(1);
+    this.label_classement.setDepth(1);
 
     const accountX = 35;
 
@@ -176,6 +194,9 @@ export default class MainMenu extends Phaser.Scene {
         fontFamily: "Comic Sans MS",
       }
     );
+
+    this.btn_login.setDepth(1);
+    this.label_login.setDepth(1);
 
     this.btn_register = this.createButton(
       485,
@@ -194,6 +215,9 @@ export default class MainMenu extends Phaser.Scene {
         fontFamily: "Comic Sans MS",
       }
     );
+
+    this.btn_register.setDepth(1);
+    this.label_register.setDepth(1);
   }
 
   clickLogin() {
@@ -242,6 +266,7 @@ export default class MainMenu extends Phaser.Scene {
   }
 
   clickPlay() {
+    this.sound.stopAll();
     this.scene.start("MainGame");
   }
 
