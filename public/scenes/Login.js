@@ -5,9 +5,12 @@ export default class Login extends Phaser.Scene {
     super({ key: "Login", active: false });
   }
 
-  init() {
+  init(data) {
     document.getElementById("name_login").style.display = "block";
     document.getElementById("pwd_login").style.display = "block";
+
+    this.resetInteractive = data.reset;
+    this.context = data.context;
   }
 
   preload() {
@@ -15,6 +18,7 @@ export default class Login extends Phaser.Scene {
     this.load.image("loginBg", "menu-bg-vertical.png");
     this.load.image("btn", "btn.png");
     this.load.image("btnHover", "btnHover.png");
+    this.load.image("close", "close.png");
   }
 
   create() {
@@ -27,25 +31,35 @@ export default class Login extends Phaser.Scene {
     this.background = this.add.image(400, 300, "loginBg");
     this.background.setScale(3.5);
 
-    // Game over title
-    this.title = this.add.text(180, y + 0.9 * h, "LOGIN", {
-      fontSize: "70px",
+    // Login title
+    this.title = this.add.text(300, 100, "LOGIN", {
+      fontSize: "60px",
       fill: "#000",
       fontFamily: "Comic Sans MS",
     });
 
-    this.createGameOverButtons(x, y, w, h);
+    this.createCloseButton(547, 68, this.clickClose);
+
+    this.createLoginButtons(x, y, w);
   }
 
-  createGameOverButtons(x, y, w, h) {
-    this.btn_menu = this.createButton(x + 0.5 * w, y, this.clickMenu);
+  createCloseButton(x, y, callback) {
+    this.close = this.add.image(x, y, "close");
+    this.close.setScale(0.75);
+
+    this.close.setInteractive();
+    this.close.on("pointerdown", callback, this);
+  }
+
+  createLoginButtons(x, y, w) {
+    this.btn_login = this.createButton(x + 0.5 * w, y, this.clickLogin);
 
     this.label_menu = this.add.text(
-      this.btn_menu.getData("centerX") - 50,
-      this.btn_menu.getData("centerY") - 28,
-      "Menu",
+      this.btn_login.getData("centerX") - 45,
+      this.btn_login.getData("centerY") - 25,
+      "Login",
       {
-        fontSize: "40px",
+        fontSize: "35px",
         fill: "#FFF",
         fontFamily: "Comic Sans MS",
       }
@@ -70,8 +84,26 @@ export default class Login extends Phaser.Scene {
     return btn;
   }
 
-  clickMenu() {
+  clickLogin() {
+    // Get HTML inputs values
+    const name = document.getElementById("name_login_input").value;
+    const pwd = document.getElementById("pwd_login_input").value;
+
+    // Test de la récupération des valeurs
+    console.log(name, pwd);
+
     // @TODO
-    this.events.emit("clickMenu");
+  }
+
+  clickClose() {
+    document.getElementById("name_login").style.display = "none";
+    document.getElementById("pwd_login").style.display = "none";
+
+    document.getElementById("name_login_input").value = "";
+    document.getElementById("pwd_login_input").value = "";
+
+    this.resetInteractive(this.context);
+
+    this.scene.stop("Login");
   }
 }

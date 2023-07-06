@@ -1,13 +1,22 @@
+body {
+    position: absolute;
+    top: 20%;
+    left: 30%;
+    right: 30%;
+    bottom: 20%;
+    background-color: grey;
+}
+
 #name_login {
     display: none;
     position: absolute;
-    top: 250px;
+    top: 225px;
 }
 
 #pwd_login {
     display: none;
     position: absolute;
-    top: 350px;
+    top: 325px;
 }
 
 .group {
@@ -31,6 +40,7 @@
 label {
     color: #333;
     font-size: 18px;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-weight: normal;
     position: absolute;
     pointer-events: none;

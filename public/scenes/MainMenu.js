@@ -13,6 +13,7 @@ export default class MainMenu extends Phaser.Scene {
   preload() {
     this.load.setPath("../assets/");
     this.load.image("btn", "btn.png");
+    this.load.image("btn_blue", "btn-blue.png");
     this.load.image("btnHover", "btnHover.png");
     this.load.spritesheet("meteor", "meteor.png", {
       frameWidth: 200,
@@ -85,26 +86,6 @@ export default class MainMenu extends Phaser.Scene {
 
     this.explosion.on("animationcomplete", this.hideExplosionGif, this);
 
-    // Crée le texte du login
-    this.loginText = this.add.text(666, 27, "LOGIN", {
-      fontSize: "32px",
-      fill: "#000",
-    });
-    this.loginText.setInteractive();
-    this.loginText.on("pointerdown", () => {
-      this.scene.launch("Login");
-    });
-
-    // Crée le texte d'inscription
-    this.registerText = this.add.text(480, 27, "REGISTER", {
-      fontSize: "32px",
-      fill: "#000",
-    });
-    this.registerText.setInteractive();
-    this.registerText.on("pointerdown", () => {
-      this.register();
-    });
-
     // Gère les collision entre les météorites et le sol
     this.physics.add.collider(this.meteors, this.ground);
   }
@@ -147,9 +128,11 @@ export default class MainMenu extends Phaser.Scene {
 
   showClassement() {
     // Show classement scene as overlay
-    this.scene.launch("Classement");
-    this.btn_play.disableInteractive();
-    this.btn_classement.disableInteractive();
+    this.scene.launch("Classement", {
+      reset: this.resetInteractive,
+      context: this,
+    });
+    this.disableButtons();
   }
 
   createMainMenuButtons() {
@@ -178,18 +161,74 @@ export default class MainMenu extends Phaser.Scene {
         fontFamily: "Comic Sans MS",
       }
     );
+
+    const accountX = 35;
+
+    this.btn_login = this.createButton(700, accountX, this.clickLogin, true);
+
+    this.label_login = this.add.text(
+      this.btn_login.getData("centerX") - 40,
+      this.btn_login.getData("centerY") - 21,
+      "Login",
+      {
+        fontSize: "32px",
+        fill: "#FFF",
+        fontFamily: "Comic Sans MS",
+      }
+    );
+
+    this.btn_register = this.createButton(
+      485,
+      accountX,
+      this.clickRegister,
+      true
+    );
+
+    this.label_register = this.add.text(
+      this.btn_register.getData("centerX") - 62,
+      this.btn_register.getData("centerY") - 20,
+      "Register",
+      {
+        fontSize: "32px",
+        fill: "#FFF",
+        fontFamily: "Comic Sans MS",
+      }
+    );
   }
 
-  createButton(centerX, centerY, callback) {
-    const btn = this.add.image(centerX, centerY, "btn").setScale(2);
-    btn.setInteractive();
-    btn.on("pointerover", () => {
-      btn.setTexture("btnHover");
-    });
+  clickLogin() {
+    this.disableButtons();
 
-    btn.on("pointerout", () => {
-      btn.setTexture("btn");
+    this.scene.launch("Login", {
+      reset: this.resetInteractive,
+      context: this,
     });
+  }
+
+  clickRegister() {
+    this.disableButtons();
+
+    this.register();
+    // @TODO
+  }
+
+  createButton(centerX, centerY, callback, account = false) {
+    var btn;
+    if (account) {
+      btn = this.add.image(centerX, centerY, "btn_blue").setScale(1.5);
+      btn.setInteractive();
+    } else {
+      btn = this.add.image(centerX, centerY, "btn").setScale(2);
+      btn.setInteractive();
+      btn.on("pointerover", () => {
+        btn.setTexture("btnHover");
+      });
+
+      btn.on("pointerout", () => {
+        btn.setTexture("btn");
+      });
+    }
+
     btn.on("pointerdown", callback, this);
 
     btn.setData("centerX", centerX);
@@ -227,5 +266,21 @@ export default class MainMenu extends Phaser.Scene {
       .catch((error) => {
         console.error("Erreur lors de l'envoie du formulaire :", error);
       });
+  }
+
+  disableButtons() {
+    this.btn_play.destroy();
+    this.btn_classement.destroy();
+    this.btn_login.destroy();
+    this.btn_register.destroy();
+
+    this.label_play.destroy();
+    this.label_classement.destroy();
+    this.label_login.destroy();
+    this.label_register.destroy();
+  }
+
+  resetInteractive(context) {
+    context.createMainMenuButtons();
   }
 }

@@ -44,7 +44,7 @@ export default class MainGame extends Phaser.Scene {
       frameWidth: 166, // Largeur d'une image du GIF
       frameHeight: 166, // Hauteur d'une image du GIF
     });
-    this.load.spritesheet('explosion', 'explosion.png', {
+    this.load.spritesheet("explosion", "explosion.png", {
       frameWidth: 236, // Largeur d'une image du GIF
       frameHeight: 176, // Hauteur d'une image du GIF
     });
@@ -103,10 +103,9 @@ export default class MainGame extends Phaser.Scene {
       .setScale(0.5)
       .setVelocityY(100);
     this.player.setCollideWorldBounds(true);
-    
 
     this.playerdeath = this.physics.add
-      .sprite(400,500, "playerdeath")
+      .sprite(400, 500, "playerdeath")
       .setScale(0.5)
       .setVelocity(100)
       .setVisible(false);
@@ -133,16 +132,25 @@ export default class MainGame extends Phaser.Scene {
 
     this.anims.create({
       key: "death",
-      frames: this.anims.generateFrameNumbers("playerdeath", { start: 0, end: 4 }),
+      frames: this.anims.generateFrameNumbers("playerdeath", {
+        start: 0,
+        end: 4,
+      }),
       frameRate: 5,
       repeat: 0,
     });
 
-    this.playerdeath.on(Phaser.Animations.Events.ANIMATION_UPDATE, (anim, frame, sprite, frameKey) => {
-      if(frame.textureFrame == 4) {
-        this.playerdeath.setPosition(this.playerdeath.x, this.playerdeath.y + 10);
+    this.playerdeath.on(
+      Phaser.Animations.Events.ANIMATION_UPDATE,
+      (anim, frame, sprite, frameKey) => {
+        if (frame.textureFrame == 4) {
+          this.playerdeath.setPosition(
+            this.playerdeath.x,
+            this.playerdeath.y + 10
+          );
+        }
       }
-    });
+    );
 
     // Crée les météorites
     this.anims.create({
@@ -288,11 +296,11 @@ export default class MainGame extends Phaser.Scene {
     this.playerdeath.setVisible(true);
     this.playerdeath.setPosition(this.player.x, this.player.y);
     this.playerdeath.anims.play("death");
-    
+
     this.gameOver = true;
 
     this.time.addEvent({
-      delay: 1000,
+      delay: 1500,
       callback: this.showGameOver,
       callbackScope: this,
     });
