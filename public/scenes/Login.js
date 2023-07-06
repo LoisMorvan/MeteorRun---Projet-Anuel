@@ -5,104 +5,73 @@ export default class Login extends Phaser.Scene {
     super({ key: "Login", active: false });
   }
 
-  init() {}
+  init() {
+    document.getElementById("name_login").style.display = "block";
+    document.getElementById("pwd_login").style.display = "block";
+  }
+
+  preload() {
+    this.load.setPath("../assets/");
+    this.load.image("loginBg", "menu-bg-vertical.png");
+    this.load.image("btn", "btn.png");
+    this.load.image("btnHover", "btnHover.png");
+  }
 
   create() {
-    const x = config.width - 200;
+    const x = config.width - 100;
     const w = config.width - 2 * x;
 
-    const y = config.height - 80;
+    const y = config.height - 140;
     const h = config.height - 2 * y;
 
-    this.background = this.add.graphics({ x: x, y: y });
-    this.background.fillStyle("0xFFF092", 1);
-    this.background.fillRoundedRect(0, 0, w, h, 0);
+    this.background = this.add.image(400, 300, "loginBg");
+    this.background.setScale(3.5);
 
-    // Login title
-    this.title = this.add.text(200, y + 0.9 * h, "LOGIN", {
+    // Game over title
+    this.title = this.add.text(180, y + 0.9 * h, "LOGIN", {
       fontSize: "70px",
       fill: "#000",
+      fontFamily: "Comic Sans MS",
     });
 
     this.createGameOverButtons(x, y, w, h);
   }
 
   createGameOverButtons(x, y, w, h) {
-    this.btn_menu = this.createButton(
-      x + 0.75 * w,
-      y + 0.19 * h,
-      this.clickMenu
-    );
+    this.btn_menu = this.createButton(x + 0.5 * w, y, this.clickMenu);
 
     this.label_menu = this.add.text(
       this.btn_menu.getData("centerX") - 50,
-      this.btn_menu.getData("centerY") - 20,
+      this.btn_menu.getData("centerY") - 28,
       "Menu",
       {
         fontSize: "40px",
         fill: "#FFF",
-      }
-    );
-
-    this.btn_retry = this.createButton(
-      x + 0.25 * w,
-      y + 0.23 * h,
-      this.clickRetry
-    );
-
-    this.label_retry = this.add.text(
-      this.btn_retry.getData("centerX") - 57,
-      this.btn_retry.getData("centerY") - 20,
-      "Retry",
-      {
-        fontSize: "40px",
-        fill: "#FFF",
+        fontFamily: "Comic Sans MS",
       }
     );
   }
 
   createButton(centerX, centerY, callback) {
-    const w = 4.5 * 50;
-    const h = 2 * 50;
-    const r = 10;
+    const btn = this.add.image(centerX, centerY, "btn").setScale(1.5);
+    btn.setInteractive();
+    btn.on("pointerover", () => {
+      btn.setTexture("btnHover");
+    });
 
-    const x = centerX - 0.5 * w;
-    const y = centerY - 0.5 * h;
+    btn.on("pointerout", () => {
+      btn.setTexture("btn");
+    });
+    btn.on("pointerdown", callback, this);
 
-    const btn = this.add.graphics({ x: x, y: y });
-
-    btn.fillStyle("0x387155", 1);
-    btn.fillRoundedRect(0, 0, w, h, r);
-
-    btn.setDataEnabled();
     btn.setData("centerX", centerX);
     btn.setData("centerY", centerY);
-
-    // Button imputs
-    const hit_area = new Phaser.Geom.Rectangle(0, 0, w, h);
-    btn.setInteractive(hit_area, Phaser.Geom.Rectangle.Contains);
-
-    // Gestion visuelle du clic sur le bouton
-    btn.myDownCallback = () => {
-      btn.clear();
-      btn.fillStyle("0x60BFB8", 1);
-      btn.fillRoundedRect(0, 0, w, h, r);
-    };
-
-    btn.myOutCallback = () => {
-      btn.clear();
-      btn.fillStyle("0x387155", 1);
-      btn.fillRoundedRect(0, 0, w, h, r);
-    };
-
-    btn.on("pointerup", callback, this);
-    btn.on("pointerdown", btn.myDownCallback, this);
-    btn.on("pointerout", btn.myOutCallback, this);
 
     return btn;
   }
 
-  clickMenu() {}
-
-  clickRetry() {}
+  clickMenu() {
+    // @TODO
+    this.events.emit("clickMenu");
+  }
 }

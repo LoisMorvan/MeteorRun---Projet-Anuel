@@ -92,7 +92,7 @@ export default class MainMenu extends Phaser.Scene {
     });
     this.loginText.setInteractive();
     this.loginText.on("pointerdown", () => {
-      this.scene.start("Login");
+      this.scene.launch("Login");
     });
 
     // Crée le texte d'inscription

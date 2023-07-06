@@ -1,9 +1,11 @@
 #name_login {
+    display: none;
     position: absolute;
     top: 250px;
 }
 
 #pwd_login {
+    display: none;
     position: absolute;
     top: 350px;
 }
