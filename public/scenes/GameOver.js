@@ -127,10 +127,12 @@ export default class GameOver extends Phaser.Scene {
   }
 
   clickMenu() {
+    this.sound.stopAll();
     this.events.emit("clickMenu");
   }
 
   clickRetry() {
+    this.sound.stopAll();
     this.events.emit("clickRetry");
   }
 }
