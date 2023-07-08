@@ -131,6 +131,7 @@ export default class Classement extends Phaser.Scene {
         // Revenir au menu principal
         this.sound.stopAll();
         this.scene.stop("Classement");
+        this.sound.stopAll();
         this.scene.start("MainMenu");
     }
 }
