@@ -24,9 +24,7 @@ export default class Login extends Phaser.Scene {
   create() {
     const x = config.width - 100;
     const w = config.width - 2 * x;
-
     const y = config.height - 140;
-    const h = config.height - 2 * y;
 
     this.background = this.add.image(400, 300, "loginBg");
     this.background.setScale(3.5);

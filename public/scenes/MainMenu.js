@@ -233,7 +233,11 @@ export default class MainMenu extends Phaser.Scene {
     this.disableButtons();
 
     this.register();
-    // @TODO
+
+    this.scene.launch("Register", {
+      reset: this.resetInteractive,
+      context: this,
+    });
   }
 
   createButton(centerX, centerY, callback, account = false) {

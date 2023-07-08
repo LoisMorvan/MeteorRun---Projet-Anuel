@@ -19,6 +19,33 @@ body {
     top: 325px;
 }
 
+
+
+#name_register {
+    display: none;
+    position: absolute;
+    top: 174px;
+}
+
+#email_register {
+    display: none;
+    position: absolute;
+    top: 244px;
+}
+
+#pwd_register {
+    display: none;
+    position: absolute;
+    top: 314px;
+}
+
+#pwd_confirm_register {
+    display: none;
+    position: absolute;
+    top: 384px;
+}
+
+
 .group {
     left: 270px;
 }
