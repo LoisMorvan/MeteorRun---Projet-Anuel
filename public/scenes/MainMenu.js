@@ -12,6 +12,8 @@ export default class MainMenu extends Phaser.Scene {
 
   preload() {
     this.load.setPath("../assets/");
+    this.load.audio('music', 'Run Away Theme.wav');
+    this.load.audio('exploSound', 'explosion.mp3');
     this.load.image("btn", "btn.png");
     this.load.image("btnHover", "btnHover.png");
     this.load.spritesheet('meteor', 'meteor.png', {
@@ -33,6 +35,12 @@ export default class MainMenu extends Phaser.Scene {
     // Ajoute le sol
     this.ground = this.physics.add.staticGroup();
     this.ground.create(400, 590, "ground").setScale(2).refreshBody();
+
+    // Ajoute une musique de fond
+    this.music = this.sound.add('music', { loop: true });
+    this.music.play();
+
+    this.exploSound = this.sound.add('exploSound', { loop: false, volume: 0.33 });
 
     // Crée les météorites
     this.anims.create({
@@ -105,6 +113,7 @@ export default class MainMenu extends Phaser.Scene {
         this.explosion.setPosition(meteor.x, meteor.y + 18);
         this.explosion.setVisible(true);
         this.explosion.play("explosion-animation");
+        this.exploSound.play();
       }
     });
   }
@@ -196,6 +205,7 @@ export default class MainMenu extends Phaser.Scene {
   }
 
   clickPlay() {
+    this.sound.stopAll();
     this.scene.start("MainGame");
   }
 }
