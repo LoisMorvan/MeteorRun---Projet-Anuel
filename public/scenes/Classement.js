@@ -71,7 +71,7 @@ export default class Classement extends Phaser.Scene {
         rank++;
       });
     }
-
+    
     this.createClassementButton(x, y, w, h);
   }
 
@@ -130,5 +130,6 @@ export default class Classement extends Phaser.Scene {
     this.sound.stopAll();
     this.resetInteractive(this.context);
     this.scene.stop("Classement");
+    this.sound.stopAll();
   }
 }

@@ -23,13 +23,14 @@ export default class MainGame extends Phaser.Scene {
 
   preload() {
     this.load.setPath("../assets/");
-    this.load.audio("music", "Run Away Theme.wav");
-    this.load.audio("exploSound", "explosion.mp3");
-    this.load.audio("starSound", "star.mp3");
-    this.load.audio("timeInSound", "timeIn.mp3");
-    this.load.audio("timeOutSound", "timeOut.mp3");
-    this.load.audio("bubbleSound", "bubble.mp3");
-    this.load.audio("oofSound", "oof.mp3");
+    this.load.audio('music', 'Run Away Theme.wav');
+    this.load.audio('exploSound', 'explosion.mp3');
+    this.load.audio('starSound', 'star.mp3');
+    this.load.audio('gameOverSound', 'Game Over.mp3');
+    this.load.audio('timeInSound', 'timeIn.mp3');
+    this.load.audio('timeOutSound', 'timeOut.mp3');
+    this.load.audio('bubbleSound', 'bubble.mp3');
+    this.load.audio('oofSound', 'oof.mp3');
     this.load.spritesheet("player", "player.png", {
       frameWidth: 100.001,
       frameHeight: 138,
@@ -64,25 +65,13 @@ export default class MainGame extends Phaser.Scene {
     // Ajoute une musique de fond
     this.music = this.sound.add("music", { loop: true });
     this.music.play();
-
-    this.exploSound = this.sound.add("exploSound", {
-      loop: false,
-      volume: 0.33,
-    });
-    this.starSound = this.sound.add("starSound", { loop: true, volume: 0.7 });
-    this.bubbleSound = this.sound.add("bubbleSound", {
-      loop: false,
-      volume: 0.66,
-    });
-    this.timeInSound = this.sound.add("timeInSound", {
-      loop: false,
-      volume: 0.8,
-    });
-    this.timeOutSound = this.sound.add("timeOutSound", {
-      loop: false,
-      volume: 0.8,
-    });
-    this.oofSound = this.sound.add("oofSound", { loop: false, volume: 0.8 });
+    this.exploSound = this.sound.add('exploSound', { loop: false, volume: 0.33 });
+    this.starSound = this.sound.add('starSound', { loop: true, volume: 0.7 });
+    this.bubbleSound = this.sound.add('bubbleSound', { loop: false, volume: 0.66 });
+    this.timeInSound = this.sound.add('timeInSound', { loop: false, volume: 0.8 });
+    this.timeOutSound = this.sound.add('timeOutSound', { loop: false, volume: 0.8 });
+    this.gameOverSound = this.sound.add('gameOverSound', { loop: false });
+    this.oofSound = this.sound.add('oofSound', { loop: false, volume: 0.8 });
 
     // Ajoute le sol
     this.ground = this.physics.add.staticGroup();
@@ -333,6 +322,7 @@ export default class MainGame extends Phaser.Scene {
     this.playerdeath.setVisible(true);
     this.playerdeath.setPosition(this.player.x, this.player.y);
     this.playerdeath.anims.play("death");
+    this.gameOverSound.play();
     this.oofSound.play();
     this.music.stop();
 
@@ -356,6 +346,7 @@ export default class MainGame extends Phaser.Scene {
   }
 
   closeGameOver() {
+    this.sound.stopAll();
     this.scene.stop("GameOver");
   }
 
@@ -367,7 +358,9 @@ export default class MainGame extends Phaser.Scene {
   }
 
   handleRetry() {
+    this.sound.removeAll();
     this.closeGameOver();
+    this.sound.removeAll()
     this.scene.restart();
   }
 
