@@ -4,7 +4,9 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./database.sqlite');
 
 // Créer la table "score"
-db.run(`
+db.run(`DELETE FROM user
+`);
+/* db.run(`
 CREATE TABLE IF NOT EXISTS user (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     pseudo TEXT NOT NULL UNIQUE,
@@ -12,7 +14,7 @@ CREATE TABLE IF NOT EXISTS user (
     pwd TEXT NOT NULL,
     score INTEGER
  )
-`);
+`); */
 
 // Fermer la connexion à la base de données
 db.close();

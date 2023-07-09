@@ -87,10 +87,10 @@ export default class Login extends Phaser.Scene {
     const name = document.getElementById("name_login_input").value;
     const pwd = document.getElementById("pwd_login_input").value;
 
-    // Test de la récupération des valeurs
-    console.log(name, pwd);
+    const errorMessage = document.getElementById("error_message");
+    errorMessage.style.display = "none";
 
-    // @TODO
+    this.login(name, pwd);
   }
 
   clickClose() {
@@ -100,8 +100,51 @@ export default class Login extends Phaser.Scene {
     document.getElementById("name_login_input").value = "";
     document.getElementById("pwd_login_input").value = "";
 
+    const errorMessage = document.getElementById("error_message");
+    errorMessage.style.display = "none";
+
     this.resetInteractive(this.context);
 
     this.scene.stop("Login");
+  }
+
+  login(pseudo, pwd) {
+    // Appel API pour se connecter
+    fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        pseudo: pseudo,
+        pwd: pwd,
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // L'utilisateur a été connecté avec succès
+          this.showLoginMessage();
+          this.clickClose();
+        } else {
+          // Afficher le message d'erreur
+          const errorMessage = document.getElementById("error_message");
+          errorMessage.innerText = data.message;
+          errorMessage.style.display = "flex";
+        }
+      })
+      .catch(error => {
+        console.error("Erreur lors de la connection :", error);
+      });
+  }
+
+  showLoginMessage() {
+    const confirmMessage = document.getElementById("confirm_message");
+    confirmMessage.innerText = "Successful connection";
+    confirmMessage.style.display = "flex";
+  
+    setTimeout(() => {
+      confirmMessage.style.display = "none";
+    }, 2000);
   }
 }

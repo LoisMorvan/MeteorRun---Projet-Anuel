@@ -97,10 +97,10 @@ export default class Register extends Phaser.Scene {
       "pwd_confirm_register_input"
     ).value;
 
-    // Test de la récupération des valeurs
-    console.log(name, email, pwd, pwd_conf);
+    const errorMessage = document.getElementById("error_message");
+    errorMessage.style.display = "none";
 
-    // @TODO
+    this.register(name, email, pwd, pwd_conf);
   }
 
   clickClose() {
@@ -114,8 +114,53 @@ export default class Register extends Phaser.Scene {
     document.getElementById("email_register_input").value = "";
     document.getElementById("pwd_confirm_register_input").value = "";
 
+    const errorMessage = document.getElementById("error_message");
+    errorMessage.style.display = "none";
+
     this.resetInteractive(this.MainMenu);
 
     this.scene.stop("Register");
+  }
+
+  register(pseudo, mail, pwd, pwd_conf) {
+    // Appel API pour s'inscrire
+    fetch("/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        pseudo: pseudo,
+        mail: mail,
+        pwd: pwd,
+        pwd_conf: pwd_conf,
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // L'utilisateur a été inscrit avec succès
+          this.showRegisterMessage();
+          this.clickClose();
+        } else {
+          // Afficher le message d'erreur
+          const errorMessage = document.getElementById("error_message");
+          errorMessage.innerText = data.message;
+          errorMessage.style.display = "flex";
+        }
+      })
+      .catch(error => {
+        console.error("Erreur lors de l'inscription :", error);
+      });
+  }
+
+  showRegisterMessage() {
+    const confirmMessage = document.getElementById("confirm_message");
+    confirmMessage.innerText = "Successful registration";
+    confirmMessage.style.display = "flex";
+
+    setTimeout(() => {
+      confirmMessage.style.display = "none";
+    }, 2000);
   }
 }

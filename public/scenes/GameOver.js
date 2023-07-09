@@ -58,7 +58,6 @@ export default class GameOver extends Phaser.Scene {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: 4, // TODO à remplacer par l'id de l'user en cours
         score: this.score,
       }),
     })
@@ -112,11 +111,11 @@ export default class GameOver extends Phaser.Scene {
     const btn = this.add.image(centerX, centerY, "btn").setScale(2);
     btn.setInteractive();
     btn.on('pointerover', () => {
-        btn.setTexture('btnHover');
+      btn.setTexture('btnHover');
     });
 
     btn.on('pointerout', () => {
-        btn.setTexture('btn');
+      btn.setTexture('btn');
     });
     btn.on("pointerdown", callback, this);
 

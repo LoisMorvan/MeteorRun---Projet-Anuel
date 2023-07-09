@@ -58,25 +58,6 @@ export default class MainMenu extends Phaser.Scene {
     });
     this.meteors = this.physics.add.group();
 
-    // Crée le texte du score
-    // this.playText = this.add.text(350, 270, "PLAY", {
-    //   fontSize: "32px",
-    //   fill: "#000",
-    // });
-    // this.playText.setInteractive();
-    // this.playText.on("pointerdown", () => {
-    //   this.scene.start("MainGame");
-    // });
-
-    // // Crée le texte du score
-    // this.classementText = this.add.text(300, 330, "CLASSEMENT", {
-    //   fontSize: "32px",
-    //   fill: "#000",
-    // });
-    // this.classementText.setInteractive();
-    // this.classementText.on("pointerdown", () => {
-    //   this.showClassement();
-    // });
     this.createMainMenuButtons();
 
     // Crée un sprite animé pour le GIF du bonus Slow Time
@@ -218,6 +199,24 @@ export default class MainMenu extends Phaser.Scene {
 
     this.btn_register.setDepth(1);
     this.label_register.setDepth(1);
+
+    this.btn_disconnect = this.createButton(700, accountX, this.clickDisconnect, true);
+
+    this.label_disconnect = this.add.text(
+      this.btn_disconnect.getData("centerX") - 45,
+      this.btn_disconnect.getData("centerY") - 20,
+      "Logout",
+      {
+        fontSize: "32px",
+        fill: "#FFF",
+        fontFamily: "Comic Sans MS",
+      }
+    );
+
+    this.btn_disconnect.setDepth(1);
+    this.label_disconnect.setDepth(1);
+
+    this.showLoginAndRegisterButtons();
   }
 
   clickLogin() {
@@ -232,13 +231,48 @@ export default class MainMenu extends Phaser.Scene {
   clickRegister() {
     this.disableButtons();
 
-    this.register();
-
     this.scene.launch("Register", {
       reset: this.resetInteractive,
       context: this,
     });
   }
+
+  clickDisconnect() {
+    fetch("/logout", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          this.btn_disconnect.visible = false;
+          this.label_disconnect.visible = false;
+
+          this.btn_login.visible = true;
+          this.btn_register.visible = true;
+          this.label_login.visible = true;
+          this.label_register.visible = true;
+
+          this.showLogoutMessage();
+        }
+      })
+      .catch(error => {
+        console.error("Erreur lors de la récupération de la variable de session :", error);
+      });
+  }
+
+  showLogoutMessage() {
+    const confirmMessage = document.getElementById("confirm_message");
+    confirmMessage.innerText = "Successful Disconnection";
+    confirmMessage.style.display = "flex";
+
+    this.time.delayedCall(2000, () => {
+      confirmMessage.style.display = "none";
+    });
+  }
+
 
   createButton(centerX, centerY, callback, account = false) {
     var btn;
@@ -274,29 +308,6 @@ export default class MainMenu extends Phaser.Scene {
     this.scene.start("MainGame");
   }
 
-  register() {
-    // Appel API pour enregistrer le score
-    fetch("/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        pseudo: "Zylau",
-        mail: "mailyto@gmail.com",
-        pwd: "lemdp2",
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Le score a été enregistré avec succès
-        console.log("Requête envoyé au back :", data);
-      })
-      .catch((error) => {
-        console.error("Erreur lors de l'envoie du formulaire :", error);
-      });
-  }
-
   disableButtons() {
     this.btn_play.destroy();
     this.btn_classement.destroy();
@@ -311,5 +322,37 @@ export default class MainMenu extends Phaser.Scene {
 
   resetInteractive(context) {
     context.createMainMenuButtons();
+  }
+
+  showLoginAndRegisterButtons() {
+    fetch("/session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.login) {
+          this.btn_disconnect.visible = true;
+          this.label_disconnect.visible = true;
+
+          this.btn_login.visible = false;
+          this.btn_register.visible = false;
+          this.label_login.visible = false;
+          this.label_register.visible = false;
+        } else {
+          this.btn_disconnect.visible = false;
+          this.label_disconnect.visible = false;
+
+          this.btn_login.visible = true;
+          this.btn_register.visible = true;
+          this.label_login.visible = true;
+          this.label_register.visible = true;
+        }
+      })
+      .catch(error => {
+        console.error("Erreur lors de la récupération de la variable de session :", error);
+      });
   }
 }
