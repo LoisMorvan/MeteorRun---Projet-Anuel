@@ -9,7 +9,7 @@ const port = 3000;
 
 // Ouvrir la connexion à la base de données SQLite
 const db = new sqlite3.Database('./database.sqlite');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
