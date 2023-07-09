@@ -4,7 +4,8 @@
   "description": "Projet Annuel ESGI Bachelor 3",
   "main": "main.js",
   "scripts": {
-    "start": "webpack && node app.js"
+    "start": "webpack && node app.js",
+    "test": "npx pm2 start app.js --name myapp"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
     "sqlite3": "^5.1.6"
   },
   "devDependencies": {
+    "pm2": "^5.3.0",
     "webpack": "^5.83.1",
     "webpack-cli": "^5.1.4"
   }
