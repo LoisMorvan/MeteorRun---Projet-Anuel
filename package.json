@@ -4,8 +4,6 @@
   "description": "Projet Annuel ESGI Bachelor 3",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js",
     "start": "webpack && node app.js"
   },
   "repository": {
