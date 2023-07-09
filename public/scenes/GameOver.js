@@ -63,8 +63,12 @@ export default class GameOver extends Phaser.Scene {
     })
       .then(response => response.json())
       .then(data => {
-        // Le score a été enregistré avec succès
-        console.log("Score enregistré :", data);
+        if(!data.succes) {
+          console.log("Aucun utilisateur connecté"); 
+        } else {
+          // Le score a été enregistré avec succès
+          console.log("Score enregistré :", data);
+        }
       })
       .catch(error => {
         console.error("Erreur lors de l'enregistrement du score :", error);

@@ -39,30 +39,34 @@ app.get('/scores', (req, res) => {
 // API enregistrer le meilleur score 
 app.post('/saveScore', (req, res) => {
     const score = req.body.score;
-    const id = req.session.user.id;
-
-    db.get('SELECT score FROM user WHERE id = ?', id, (err, row) => {
-        if (err) {
-            console.error(err);
-            res.status(500).json({ error: 'Internal Server Error' });
-        } else {
-            const oldScore = row.score;
-
-            if (oldScore && score <= oldScore) {
-                // Le nouveau score est inférieur ou égal à l'ancien score, ne mettez pas à jour la base de données
-                res.json({ success: false, message: 'Le score actuel est inférieur ou égal à l\'ancien score.' });
+    console.log(req.session.user);
+    if (!req.session.user) {
+        res.json({ success: false });
+        return;
+    } else {
+        const id = req.session.user.id;
+        db.get('SELECT score FROM user WHERE id = ?', id, (err, row) => {
+            if (err) {
+                console.error(err);
+                res.status(500).json({ error: 'Internal Server Error' });
             } else {
-                db.run('UPDATE user SET score = ? WHERE id = ?', [score, id], (err) => {
-                    if (err) {
-                        console.error(err);
-                        res.status(500).json({ error: 'Internal Server Error' });
-                    } else {
-                        res.json({ success: true, message: 'Score enregistré avec succès.' });
-                    }
-                });
+                const oldScore = row.score;
+                if (oldScore && score <= oldScore) {
+                    // Le nouveau score est inférieur ou égal à l'ancien score, ne mettez pas à jour la base de données
+                    res.json({ success: false, message: 'Le score actuel est inférieur ou égal à l\'ancien score.' });
+                } else {
+                    db.run('UPDATE user SET score = ? WHERE id = ?', [score, id], (err) => {
+                        if (err) {
+                            console.error(err);
+                            res.status(500).json({ error: 'Internal Server Error' });
+                        } else {
+                            res.json({ success: true, message: 'Score enregistré avec succès.' });
+                        }
+                    });
+                }
             }
-        }
-    });
+        });
+    }
 });
 
 // API pour voir toutes les données dans la base
