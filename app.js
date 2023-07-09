@@ -39,7 +39,7 @@ app.get('/scores', (req, res) => {
 // API enregistrer le meilleur score 
 app.post('/saveScore', (req, res) => {
     const score = req.body.score;
-    console.log(req.session.user);
+    
     if (!req.session.user) {
         res.json({ success: false });
         return;
