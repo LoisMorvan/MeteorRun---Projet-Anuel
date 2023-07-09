@@ -58,8 +58,8 @@ export default class MainMenu extends Phaser.Scene {
     });
     this.meteors = this.physics.add.group();
 
-    this.titre = this.add.text(220, 150, 'MeteorRun', { 
-      fontSize: '70px', 
+    this.titre = this.add.text(220, 150, 'MeteorRun', {
+      fontSize: '70px',
       fill: '#000',
       fontFamily: "Comic Sans MS",
     });
@@ -257,7 +257,13 @@ export default class MainMenu extends Phaser.Scene {
         "Content-Type": "application/json",
       },
     })
-      .then((response) => response.json())
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Logout request failed.");
+        }
+      })
       .then((data) => {
         if (data.success) {
           this.btn_disconnect.visible = false;
@@ -348,7 +354,13 @@ export default class MainMenu extends Phaser.Scene {
         "Content-Type": "application/json",
       },
     })
-      .then((response) => response.json())
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Session request failed.");
+        }
+      })
       .then((data) => {
         if (data.login) {
           this.btn_disconnect.visible = true;

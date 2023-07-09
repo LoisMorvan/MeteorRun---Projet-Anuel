@@ -9,13 +9,14 @@ export default class Classement extends Phaser.Scene {
     this.resetInteractive = data.reset;
     this.context = data.context;
 
-    // Récupérer les meilleurs scores des joueurs depuis la base de données
-    // Utilisez les appels à la base de données appropriés pour récupérer les scores et les pseudonymes des joueurs
-    // Assurez-vous d'adapter cela à votre propre code et configuration de base de données
-
-    // Exemple avec une requête asynchrone à une API fictive
     fetch("/scores")
-      .then((response) => response.json())
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Scores request failed.");
+        }
+      })
       .then((data) => {
         // Utilisez les données récupérées pour mettre à jour le classement
         this.ClassementData = data;
@@ -71,7 +72,7 @@ export default class Classement extends Phaser.Scene {
         rank++;
       });
     }
-    
+
     this.createClassementButton(x, y, w, h);
   }
 

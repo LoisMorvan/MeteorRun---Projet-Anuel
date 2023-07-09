@@ -61,10 +61,16 @@ export default class GameOver extends Phaser.Scene {
         score: this.score,
       }),
     })
-      .then(response => response.json())
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("SaveScore request failed.");
+        }
+      })
       .then(data => {
-        if(!data.succes) {
-          console.log("Aucun utilisateur connecté"); 
+        if (!data.succes) {
+          console.log("Aucun utilisateur connecté");
         } else {
           // Le score a été enregistré avec succès
           console.log("Score enregistré :", data);

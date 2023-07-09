@@ -120,7 +120,13 @@ export default class Login extends Phaser.Scene {
         pwd: pwd,
       }),
     })
-      .then(response => response.json())
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Login request failed.");
+        }
+      })
       .then(data => {
         if (data.success) {
           // L'utilisateur a été connecté avec succès
@@ -142,7 +148,7 @@ export default class Login extends Phaser.Scene {
     const confirmMessage = document.getElementById("confirm_message");
     confirmMessage.innerText = "Successful connection";
     confirmMessage.style.display = "flex";
-  
+
     setTimeout(() => {
       confirmMessage.style.display = "none";
     }, 2000);

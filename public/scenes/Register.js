@@ -136,7 +136,13 @@ export default class Register extends Phaser.Scene {
         pwd_conf: pwd_conf,
       }),
     })
-      .then(response => response.json())
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Register request failed.");
+        }
+      })
       .then(data => {
         if (data.success) {
           // L'utilisateur a été inscrit avec succès
