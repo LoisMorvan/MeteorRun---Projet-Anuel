@@ -163,6 +163,27 @@ export default class MainMenu extends Phaser.Scene {
 
     const accountX = 35;
 
+    this.btn_disconnect = this.createButton(
+      700,
+      accountX,
+      this.clickDisconnect,
+      true
+    );
+
+    this.label_disconnect = this.add.text(
+      this.btn_disconnect.getData("centerX") - 45,
+      this.btn_disconnect.getData("centerY") - 20,
+      "Logout",
+      {
+        fontSize: "32px",
+        fill: "#FFF",
+        fontFamily: "Comic Sans MS",
+      }
+    );
+
+    this.btn_disconnect.setDepth(1);
+    this.label_disconnect.setDepth(1);
+
     this.btn_login = this.createButton(700, accountX, this.clickLogin, true);
 
     this.label_login = this.add.text(
@@ -200,22 +221,6 @@ export default class MainMenu extends Phaser.Scene {
     this.btn_register.setDepth(1);
     this.label_register.setDepth(1);
 
-    this.btn_disconnect = this.createButton(700, accountX, this.clickDisconnect, true);
-
-    this.label_disconnect = this.add.text(
-      this.btn_disconnect.getData("centerX") - 45,
-      this.btn_disconnect.getData("centerY") - 20,
-      "Logout",
-      {
-        fontSize: "32px",
-        fill: "#FFF",
-        fontFamily: "Comic Sans MS",
-      }
-    );
-
-    this.btn_disconnect.setDepth(1);
-    this.label_disconnect.setDepth(1);
-
     this.showLoginAndRegisterButtons();
   }
 
@@ -244,8 +249,8 @@ export default class MainMenu extends Phaser.Scene {
         "Content-Type": "application/json",
       },
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.success) {
           this.btn_disconnect.visible = false;
           this.label_disconnect.visible = false;
@@ -258,8 +263,11 @@ export default class MainMenu extends Phaser.Scene {
           this.showLogoutMessage();
         }
       })
-      .catch(error => {
-        console.error("Erreur lors de la récupération de la variable de session :", error);
+      .catch((error) => {
+        console.error(
+          "Erreur lors de la récupération de la variable de session :",
+          error
+        );
       });
   }
 
@@ -272,7 +280,6 @@ export default class MainMenu extends Phaser.Scene {
       confirmMessage.style.display = "none";
     });
   }
-
 
   createButton(centerX, centerY, callback, account = false) {
     var btn;
@@ -313,11 +320,13 @@ export default class MainMenu extends Phaser.Scene {
     this.btn_classement.destroy();
     this.btn_login.destroy();
     this.btn_register.destroy();
+    this.btn_disconnect.destroy();
 
     this.label_play.destroy();
     this.label_classement.destroy();
     this.label_login.destroy();
     this.label_register.destroy();
+    this.label_disconnect.destroy();
   }
 
   resetInteractive(context) {
@@ -331,8 +340,8 @@ export default class MainMenu extends Phaser.Scene {
         "Content-Type": "application/json",
       },
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.login) {
           this.btn_disconnect.visible = true;
           this.label_disconnect.visible = true;
@@ -351,8 +360,11 @@ export default class MainMenu extends Phaser.Scene {
           this.label_register.visible = true;
         }
       })
-      .catch(error => {
-        console.error("Erreur lors de la récupération de la variable de session :", error);
+      .catch((error) => {
+        console.error(
+          "Erreur lors de la récupération de la variable de session :",
+          error
+        );
       });
   }
 }
