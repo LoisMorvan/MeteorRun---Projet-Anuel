@@ -34,7 +34,6 @@ app.get('/scores', (req, res) => {
             console.error(err);
             res.status(500).json({ error: 'Internal Server Error' });
         } else {
-            console.log("/scores Request successful");
             res.json(rows);
         }
     });

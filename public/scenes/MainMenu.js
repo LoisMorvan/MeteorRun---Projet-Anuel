@@ -58,14 +58,6 @@ export default class MainMenu extends Phaser.Scene {
     });
     this.meteors = this.physics.add.group();
 
-    this.titre = this.add.text(220, 150, 'MeteorRun', {
-      fontSize: '70px',
-      fill: '#000',
-      fontFamily: "Comic Sans MS",
-    });
-
-    this.titre.setDepth(1);
-
     this.createMainMenuButtons();
 
     // Crée un sprite animé pour le GIF du bonus Slow Time
@@ -137,6 +129,14 @@ export default class MainMenu extends Phaser.Scene {
   }
 
   createMainMenuButtons() {
+    this.titre = this.add.text(220, 150, 'MeteorRun', {
+      fontSize: '70px',
+      fill: '#000',
+      fontFamily: "Comic Sans MS",
+    });
+
+    this.titre.setDepth(1);
+
     this.btn_play = this.createButton(400, 309, this.clickPlay);
 
     this.label_play = this.add.text(
@@ -335,6 +335,8 @@ export default class MainMenu extends Phaser.Scene {
     this.btn_login.destroy();
     this.btn_register.destroy();
     this.btn_disconnect.destroy();
+
+    this.titre.destroy();
 
     this.label_play.destroy();
     this.label_classement.destroy();
