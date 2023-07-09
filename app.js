@@ -20,6 +20,10 @@ app.use(session({
     saveUninitialized: false,
 }));
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // API pour récupérer les meilleurs scores des joueurs
 app.get('/scores', (req, res) => {
     db.all(`SELECT pseudo, score FROM user 
