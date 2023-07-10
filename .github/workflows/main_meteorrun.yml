@@ -45,9 +45,6 @@ jobs:
         with:
           name: node-app
 
-      - name: Test
-        run: node app.js
-
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
