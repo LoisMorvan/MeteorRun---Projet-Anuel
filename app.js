@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
 // Ouvrir la connexion à la base de données SQLite
 const db = new sqlite3.Database('./database.sqlite');

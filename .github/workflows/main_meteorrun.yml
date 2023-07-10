@@ -45,8 +45,8 @@ jobs:
         with:
           name: node-app
         
-      - name: 'Start server'
-        run: node app.js
+      # - name: 'Start server'
+      #   run: node app.js
         
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
