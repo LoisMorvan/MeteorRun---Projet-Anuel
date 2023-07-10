@@ -21,10 +21,11 @@ jobs:
         with:
           node-version: '18.x'
 
-      - name: npm install and run
+      - name: npm install, build, and test
         run: |
           npm install
-          npx webpack
+          npm run build --if-present
+          npm run test --if-present
       
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
@@ -44,12 +45,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: node-app
-        
+
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
           app-name: 'MeteorRun'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F9803C2C70A148AA9D8B8C3E222A79F7 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BD210756042145CCBD4EA909B8AFB7BF }}
           package: .
