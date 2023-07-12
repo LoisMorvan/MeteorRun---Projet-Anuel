@@ -70,7 +70,7 @@ export default class GameOver extends Phaser.Scene {
         }
       })
       .then(data => {
-        if (!data.success) {
+        if (!data.log) {
           console.log("Aucun utilisateur connecté");
         } else {
           // Le score a été enregistré avec succès
