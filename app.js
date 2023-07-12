@@ -44,7 +44,7 @@ app.post('/saveScore', (req, res) => {
     const score = req.body.score;
     
     if (!req.session.user) {
-        res.json({ success: false });
+        res.json({ log: false });
         return;
     } else {
         const id = req.session.user.id;
