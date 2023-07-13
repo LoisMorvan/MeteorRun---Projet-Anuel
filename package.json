@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "webpack && node app.js",
-    "build": "node app.js"
+    "build": "npx webpack"
   },
   "repository": {
     "type": "git",
